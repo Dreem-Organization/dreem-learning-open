@@ -1,0 +1,306 @@
+{
+  "metadata": {
+    "git_branch": "dreem-learning-open",
+    "git_hash": "b8cffc8519e8cc6ddbed52901c7a9dc115a2db56",
+    "begin": 1569981757,
+    "end": 1569984577,
+    "experiment_id": "5f5c3ed0-28f0-48d9-9d6e-963815f20923"
+  },
+  "dataset_settings": {
+    "records": "/data/datasets/dodh/h5/",
+    "h5_directory": "/data/h5/dodh/",
+    "memmap_directory": "/data/memmap/dodh/"
+  },
+  "memmap_description": {
+    "signals": [
+      {
+        "name": "eeg",
+        "signals": [
+          "signals/eeg/C3_M2",
+          "signals/eeg/F4_M1",
+          "signals/eeg/F3_F4",
+          "signals/eeg/F3_M2",
+          "signals/eeg/F4_O2",
+          "signals/eeg/F3_O1",
+          "signals/eeg/FP1_F3",
+          "signals/eeg/FP1_M2",
+          "signals/eeg/FP1_O1",
+          "signals/eeg/FP2_F4",
+          "signals/eeg/FP2_M1",
+          "signals/eeg/FP2_O2",
+          "signals/emg/EMG",
+          "signals/emg/ECG",
+          "signals/eog/EOG1",
+          "signals/eog/EOG2"
+        ],
+        "signals_names": [
+          "signals/eeg/C3_M2",
+          "signals/eeg/F4_M1",
+          "signals/eeg/F3_F4",
+          "signals/eeg/F3_M2",
+          "signals/eeg/F4_O2",
+          "signals/eeg/F3_O1",
+          "signals/eeg/FP1_F3",
+          "signals/eeg/FP1_M2",
+          "signals/eeg/FP1_O1",
+          "signals/eeg/FP2_F4",
+          "signals/eeg/FP2_M1",
+          "signals/eeg/FP2_O2",
+          "signals/emg/EMG",
+          "signals/emg/ECG",
+          "signals/eog/EOG1",
+          "signals/eog/EOG2"
+        ],
+        "processings": [
+          {
+            "type": "filter",
+            "args": {}
+          },
+          {
+            "type": "resample",
+            "args": {
+              "target_frequency": 100
+            }
+          },
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+      {
+        "name": "epoch_index",
+        "processing": {
+          "type": "index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      },
+      {
+        "name": "epoch_cycle_index",
+        "processing": {
+          "type": "cycle_index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      }
+    ]
+  },
+  "groups_description": {
+    "eeg": {
+      "fs": 100,
+      "padding": 900,
+      "shape": [
+        3000,
+        16
+      ],
+      "window_length": 3000
+    }
+  },
+  "features_description": {
+    "epoch_index": {
+      "shape": [
+        1
+      ]
+    },
+    "epoch_cycle_index": {
+      "shape": [
+        5
+      ]
+    }
+  },
+  "dataset_parameters": {
+    "split": {
+      "train": [
+        "/data/memmap/dodh/31fdfa5fb3/5d01f8da-039d-454c-b39b-93d411f6edb3/",
+        "/data/memmap/dodh/31fdfa5fb3/377ca73e-8eeb-4e73-bd2e-c8835c7124df/",
+        "/data/memmap/dodh/31fdfa5fb3/072653fc-1944-4eb7-b84a-c7a5ccad16fb/",
+        "/data/memmap/dodh/31fdfa5fb3/771ca402-dc58-4bed-854c-3a45666c21c7/",
+        "/data/memmap/dodh/31fdfa5fb3/01e60017-d3b5-41cf-bcfb-bde09d46003f/",
+        "/data/memmap/dodh/31fdfa5fb3/75599827-7769-47ae-9fb7-802c22500716/",
+        "/data/memmap/dodh/31fdfa5fb3/42f25159-530e-47be-ab07-0895e565ad08/",
+        "/data/memmap/dodh/31fdfa5fb3/65726d19-cfe1-4556-8148-8874a7d207b2/",
+        "/data/memmap/dodh/31fdfa5fb3/e055b5a6-19aa-48dc-9229-1912932959be/",
+        "/data/memmap/dodh/31fdfa5fb3/6776c5fc-6487-4f43-ad70-14ebc22efbd2/",
+        "/data/memmap/dodh/31fdfa5fb3/72e22310-ab5d-4e0f-9d44-5c198d3a0c06/",
+        "/data/memmap/dodh/31fdfa5fb3/439d4fbf-0a0e-40f3-8b5a-0c954092e840/",
+        "/data/memmap/dodh/31fdfa5fb3/e00f7d62-ca02-45cd-8e44-ac9cee6e0c0d/",
+        "/data/memmap/dodh/31fdfa5fb3/2721aa08-e796-453d-b36b-a6a401874ee0/",
+        "/data/memmap/dodh/31fdfa5fb3/889dcc46-9998-4b54-9c49-f291f153d101/",
+        "/data/memmap/dodh/31fdfa5fb3/de3af7b1-ab6f-43fd-96f0-6fc64e8d2ed4/",
+        "/data/memmap/dodh/31fdfa5fb3/68f038f2-7dee-4eb1-8cd3-066eb4c4afaa/",
+        "/data/memmap/dodh/31fdfa5fb3/a14f8058-f636-4be7-a67a-8f7f91a419e7/"
+      ],
+      "val": [
+        "/data/memmap/dodh/31fdfa5fb3/a3b1eed4-6866-4cc3-9dd6-de7b8ec417c8/",
+        "/data/memmap/dodh/31fdfa5fb3/63b799f6-8a4f-4224-8797-ea971f78fb53/",
+        "/data/memmap/dodh/31fdfa5fb3/7d06e617-8996-4bad-aa5c-62a0e5a49282/",
+        "/data/memmap/dodh/31fdfa5fb3/799df2d1-5205-4a03-8fd7-f1f77405d4cd/",
+        "/data/memmap/dodh/31fdfa5fb3/1340cbed-33fb-458c-885e-b9b1fe1bf90e/",
+        "/data/memmap/dodh/31fdfa5fb3/198c91b9-2cdc-4707-ab11-28fc42a6d874/"
+      ],
+      "test": [
+        "/data/memmap/dodh/31fdfa5fb3/99603fdb-febf-447a-a1f7-a1a9062d61a6/"
+      ]
+    },
+    "temporal_context": 21,
+    "input_temporal_dimension": 1,
+    "transform_parameters": [
+      {
+        "name": "eeg",
+        "processing": [
+          {
+            "type": "kill_channel",
+            "args": {
+              "p": 0.5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "normalization_parameters": {
+    "signals": [
+      {
+        "name": "eeg",
+        "normalization": [
+          {
+            "type": "clip_and_scale",
+            "args": {
+              "min_value": -500,
+              "max_value": 500
+            }
+          },
+          {
+            "type": "spectrogram",
+            "args": {
+              "logpower": true,
+              "window_duration": 2,
+              "window_overlap": 1,
+              "fs": 100,
+              "clamp": 1e-20
+            }
+          },
+          {
+            "type": "standardization",
+            "args": {}
+          }
+        ]
+      }
+    ],
+    "features": []
+  },
+  "trainers_parameters": {
+    "type": "base",
+    "args": {
+      "epochs": 100,
+      "patience": 15,
+      "optimizer": {
+        "type": "adam",
+        "args": {
+          "lr": 0.001
+        }
+      }
+    }
+  },
+  "net_parameters": {
+    "n_class": 5,
+    "output_mode": "many",
+    "eval_output_mode": "many",
+    "type": "modulo_net",
+    "encoders": {
+      "eeg": {
+        "type": "SimpleSleepEpochEncoder",
+        "args": {
+          "hidden_layers": 25,
+          "filter_dim": 30,
+          "dropout": 0.5,
+          "bidir": true
+        }
+      }
+    },
+    "reducer": {
+      "type": "AttentionReducer",
+      "args": {
+        "context_size": 25
+      }
+    },
+    "features_encoder": {
+      "type": "FullyConnected",
+      "args": {
+        "layers": [
+          5
+        ]
+      }
+    },
+    "sequence_encoder": {
+      "type": "ResidualGRUSequenceEncoder",
+      "args": {
+        "cells": 25,
+        "dropout": 0.5,
+        "bidir": true,
+        "layers": 2
+      }
+    }
+  },
+  "performance_on_test_set": {
+    "accuracy": 0.9106302916274694,
+    "cohen_kappa": 0.8435544139700324,
+    "f1": 0.912221836631605
+  },
+  "performance_per_records": {
+    "99603fdb-febf-447a-a1f7-a1a9062d61a6": {
+      "accuracy": 0.9106302916274694,
+      "cohen_kappa": 0.8435544139700324,
+      "f1": 0.912221836631605
+    }
+  },
+  "records_split": {
+    "train_records": [
+      "5d01f8da-039d-454c-b39b-93d411f6edb3",
+      "377ca73e-8eeb-4e73-bd2e-c8835c7124df",
+      "072653fc-1944-4eb7-b84a-c7a5ccad16fb",
+      "771ca402-dc58-4bed-854c-3a45666c21c7",
+      "01e60017-d3b5-41cf-bcfb-bde09d46003f",
+      "75599827-7769-47ae-9fb7-802c22500716",
+      "42f25159-530e-47be-ab07-0895e565ad08",
+      "65726d19-cfe1-4556-8148-8874a7d207b2",
+      "e055b5a6-19aa-48dc-9229-1912932959be",
+      "6776c5fc-6487-4f43-ad70-14ebc22efbd2",
+      "72e22310-ab5d-4e0f-9d44-5c198d3a0c06",
+      "439d4fbf-0a0e-40f3-8b5a-0c954092e840",
+      "e00f7d62-ca02-45cd-8e44-ac9cee6e0c0d",
+      "2721aa08-e796-453d-b36b-a6a401874ee0",
+      "889dcc46-9998-4b54-9c49-f291f153d101",
+      "de3af7b1-ab6f-43fd-96f0-6fc64e8d2ed4",
+      "68f038f2-7dee-4eb1-8cd3-066eb4c4afaa",
+      "a14f8058-f636-4be7-a67a-8f7f91a419e7"
+    ],
+    "validation_records": [
+      "a3b1eed4-6866-4cc3-9dd6-de7b8ec417c8",
+      "63b799f6-8a4f-4224-8797-ea971f78fb53",
+      "7d06e617-8996-4bad-aa5c-62a0e5a49282",
+      "799df2d1-5205-4a03-8fd7-f1f77405d4cd",
+      "1340cbed-33fb-458c-885e-b9b1fe1bf90e",
+      "198c91b9-2cdc-4707-ab11-28fc42a6d874"
+    ],
+    "test_records": [
+      "99603fdb-febf-447a-a1f7-a1a9062d61a6"
+    ]
+  }
+}

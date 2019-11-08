@@ -1,0 +1,15 @@
+{
+  "type": "base",
+  "args": {
+    "epochs": 100,
+    "patience": 15,
+    "epochs_online": 0,
+    "patience_online": 0,
+    "optimizer": {
+      "type": "adam",
+      "args": {
+        "lr": 1e-3
+      }
+    }
+  }
+}

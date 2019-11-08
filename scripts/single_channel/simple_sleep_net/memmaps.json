@@ -1,0 +1,120 @@
+[
+  {
+    "dataset": "dodh",
+    "name": "f4_o2",
+    "signals": [
+      {
+        "name": "eeg",
+        "signals": [
+          "signals/eeg/F4_O2"
+        ],
+        "processings": [
+          {
+            "type": "filter",
+            "args": {}
+          },
+          {
+            "type": "resample",
+            "args": {
+              "target_frequency": 100
+            }
+          },
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+      {
+        "name": "epoch_index",
+        "processing": {
+          "type": "index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      },
+      {
+        "name": "epoch_cycle_index",
+        "processing": {
+          "type": "cycle_index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      }
+    ]
+  },
+  {
+    "dataset": "dodo",
+    "name": "f4_o2",
+    "signals": [
+      {
+        "name": "eeg",
+        "signals": [
+          "signals/eeg/F4_O2"
+        ],
+        "processings": [
+          {
+            "type": "filter",
+            "args": {}
+          },
+          {
+            "type": "resample",
+            "args": {
+              "target_frequency": 100
+            }
+          },
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+      {
+        "name": "epoch_index",
+        "processing": {
+          "type": "index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      },
+      {
+        "name": "epoch_cycle_index",
+        "processing": {
+          "type": "cycle_index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      }
+    ]
+  }
+]

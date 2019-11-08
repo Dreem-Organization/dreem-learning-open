@@ -1,0 +1,13 @@
+{
+  "type": "base",
+  "args": {
+    "epochs": 2,
+    "patience": 15,
+    "optimizer": {
+      "type": "adam",
+      "args": {
+        "lr": 1e-3
+      }
+    }
+  }
+}

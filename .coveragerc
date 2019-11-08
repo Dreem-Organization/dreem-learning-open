@@ -1,0 +1,25 @@
+[run]
+omit =
+    dreem_learning_hypnogram/scripts/*
+    dreem_learning_hypnogram/utils/*
+    dreem_learning_hypnogram/logger/*
+    dreem_learning_hypnogram/settings.py
+    dreem_learning_hypnogram/settings_template.py
+    dreem_learning_hypnogram/test/*
+
+
+source =
+    dreem_learning_hypnogram/datasets/*
+    dreem_learning_hypnogram/*
+    dreem_learning_hypnogram/preprocessings/*
+    dreem_learning_hypnogram/trainers/*
+    dreem_learning_hypnogram/models/modulo_net/*
+
+[report]
+exclude_lines =
+    omit_from_online_test
+    @jit.script_method
+    __name__ == '__main__'
+    format_for_embedded
+    load_for_online
+    save_for_online

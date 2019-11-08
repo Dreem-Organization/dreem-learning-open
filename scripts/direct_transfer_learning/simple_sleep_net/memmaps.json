@@ -1,0 +1,132 @@
+[
+  {
+    "dataset": "dodh",
+    "signals": [
+      {
+        "name": "eeg",
+        "signals": [
+          "signals/eeg/C3_M2",
+          "signals/eeg/F3_F4",
+          "signals/eeg/F3_M2",
+          "signals/eeg/F4_O2",
+          "signals/eeg/F3_O1",
+          "signals/emg/EMG",
+          "signals/eog/EOG1",
+          "signals/eog/EOG2"
+        ],
+        "processings": [
+          {
+            "type": "filter",
+            "args": {}
+          },
+          {
+            "type": "resample",
+            "args": {
+              "target_frequency": 100
+            }
+          },
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+      {
+        "name": "epoch_index",
+        "processing": {
+          "type": "index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      },
+      {
+        "name": "epoch_cycle_index",
+        "processing": {
+          "type": "cycle_index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      }
+    ]
+  },
+  {
+    "dataset": "dodo",
+    "signals": [
+      {
+        "name": "eeg",
+        "signals": [
+          "signals/eeg/C3_M2",
+          "signals/eeg/F3_F4",
+          "signals/eeg/F3_M2",
+          "signals/eeg/F4_O2",
+          "signals/eeg/F3_O1",
+          "signals/emg/EMG",
+          "signals/eog/EOG1",
+          "signals/eog/EOG2"
+        ],
+        "processings": [
+          {
+            "type": "filter",
+            "args": {}
+          },
+          {
+            "type": "resample",
+            "args": {
+              "target_frequency": 100
+            }
+          },
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+      {
+        "name": "epoch_index",
+        "processing": {
+          "type": "index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      },
+      {
+        "name": "epoch_cycle_index",
+        "processing": {
+          "type": "cycle_index_window",
+          "args": {
+            "increment_duration": 30,
+            "padding_duration": 900
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ]
+      }
+    ]
+  }
+]

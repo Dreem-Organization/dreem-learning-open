@@ -1,0 +1,13 @@
+[
+  {
+    "name": "eeg",
+    "processing": [
+      {
+        "type": "kill_channel",
+        "args": {
+          "p": 0.5
+        }
+      }
+    ]
+  }
+]

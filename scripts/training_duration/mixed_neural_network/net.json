@@ -1,0 +1,26 @@
+{
+  "n_class": 5,
+  "output_mode": "many",
+  "eval_output_mode": "many",
+  "type": "modulo_net",
+  "encoders": {},
+  "features_encoder": {
+    "type": "FullyConnected",
+    "args": {
+      "layers": [
+        300,
+        300
+      ],
+      "dropout": 0.3
+    }
+  },
+  "sequence_encoder": {
+    "type": "LSTMSequenceEncoder",
+    "args": {
+      "cells": 200,
+      "dropout": 0.5,
+      "bidir": true,
+      "layers": 1
+    }
+  }
+}

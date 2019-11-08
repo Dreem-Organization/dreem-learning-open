@@ -1,0 +1,21 @@
+{
+  "signals": [
+    {
+      "name": "eeg",
+      "normalization": [
+        {
+          "type": "clip_and_scale",
+          "args": {
+            "min_value": -500,
+            "max_value": 500
+          }
+        },
+        {
+          "type": "standardization",
+          "args": {}
+        }
+      ]
+    }
+  ],
+  "features": []
+}

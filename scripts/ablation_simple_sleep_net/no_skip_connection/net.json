@@ -1,0 +1,40 @@
+{
+  "n_class": 5,
+  "output_mode": "many",
+  "eval_output_mode": "many",
+  "type": "modulo_net",
+  "encoders": {
+    "eeg": {
+      "type": "SimpleSleepEpochEncoder",
+      "args": {
+        "hidden_layers": 25,
+        "filter_dim": 30,
+        "dropout": 0.5,
+        "bidir": true
+      }
+    }
+  },
+  "reducer": {
+    "type": "AttentionReducer",
+    "args": {
+      "context_size": 25
+    }
+  },
+  "features_encoder": {
+    "type": "FullyConnected",
+    "args": {
+      "layers": [
+        5
+      ]
+    }
+  },
+  "sequence_encoder": {
+    "type": "GRUSequenceEncoder",
+    "args": {
+      "cells": 25,
+      "dropout": 0.5,
+      "bidir": true,
+      "layers": 2
+    }
+  }
+}

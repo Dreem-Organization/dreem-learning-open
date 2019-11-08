@@ -1,0 +1,38 @@
+[
+  {
+    "name": "tc_1",
+    "temporal_context": 1,
+    "temporal_context_mode": "sequential"
+  },
+  {
+    "name": "tc_3",
+    "temporal_context": 3,
+    "temporal_context_mode": "sequential"
+  },
+  {
+    "name": "tc_5",
+    "temporal_context": 5,
+    "temporal_context_mode": "sequential"
+  },
+  {
+    "name": "tc_7",
+    "temporal_context": 7,
+    "temporal_context_mode": "sequential"
+  },
+  {
+    "name": "tc_11",
+    "temporal_context": 11,
+    "temporal_context_mode": "sequential"
+  },
+  {
+    "name": "tc_15",
+    "temporal_context": 15,
+    "temporal_context_mode": "sequential"
+  },
+  {
+    "name": "tc_17",
+    "temporal_context": 17,
+    "temporal_context_mode": "sequential"
+  }
+]
+

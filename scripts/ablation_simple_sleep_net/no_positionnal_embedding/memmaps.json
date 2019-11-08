@@ -1,0 +1,91 @@
+[
+  {
+    "dataset": "dodh",
+    "signals": [
+      {
+        "name": "eeg",
+        "signals": [
+          "signals/eeg/C3_M2",
+          "signals/eeg/F4_M1",
+          "signals/eeg/F3_F4",
+          "signals/eeg/F3_M2",
+          "signals/eeg/F4_O2",
+          "signals/eeg/F3_O1",
+          "signals/eeg/FP1_F3",
+          "signals/eeg/FP1_M2",
+          "signals/eeg/FP1_O1",
+          "signals/eeg/FP2_F4",
+          "signals/eeg/FP2_M1",
+          "signals/eeg/FP2_O2",
+          "signals/emg/EMG",
+          "signals/emg/ECG",
+          "signals/eog/EOG1",
+          "signals/eog/EOG2"
+        ],
+        "processings": [
+          {
+            "type": "filter",
+            "args": {}
+          },
+          {
+            "type": "resample",
+            "args": {
+              "target_frequency": 100
+            }
+          },
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": []
+  },
+  {
+    "dataset": "dodo",
+    "signals": [
+      {
+        "name": "eeg",
+        "signals": [
+          "signals/eeg/C3_M2",
+          "signals/eeg/C4_M1",
+          "signals/eeg/F3_F4",
+          "signals/eeg/F3_M2",
+          "signals/eeg/F4_O2",
+          "signals/eeg/F3_O1",
+          "signals/eeg/O1_M2",
+          "signals/eeg/O2_M1",
+          "signals/emg/EMG",
+          "signals/emg/ECG",
+          "signals/eog/EOG1",
+          "signals/eog/EOG2"
+        ],
+        "processings": [
+          {
+            "type": "filter",
+            "args": {}
+          },
+          {
+            "type": "resample",
+            "args": {
+              "target_frequency": 100
+            }
+          },
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+    ]
+  }
+]

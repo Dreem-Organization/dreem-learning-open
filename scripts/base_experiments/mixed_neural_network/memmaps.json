@@ -1,0 +1,322 @@
+[
+  {
+    "dataset": "dodh",
+    "signals": [],
+    "features": [
+      {
+        "name": "spectral_power",
+        "processing": {
+          "type": "spectral_power",
+          "args": {
+            "frequency_interval": [
+              [
+                0.06,
+                0.1
+              ],
+              [
+                0.1,
+                0.3
+              ],
+              [
+                0.3,
+                0.5
+              ],
+              [
+                0.5,
+                1
+              ],
+              [
+                0.5,
+                2
+              ],
+              [
+                1.6,
+                4
+              ],
+              [
+                3,
+                4.5
+              ],
+              [
+                4,
+                7
+              ],
+              [
+                8,
+                13
+              ],
+              [
+                11,
+                16
+              ],
+              [
+                15,
+                30
+              ]
+            ],
+            "stft_duration": 5,
+            "stft_overlap": 3.5,
+            "statistics": [
+              "mean",
+              "max",
+              "min",
+              "std",
+              "median"
+            ]
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_M1"
+        ]
+      },
+      {
+        "name": "spectral_power_slow",
+        "processing": {
+          "type": "spectral_power",
+          "args": {
+            "frequency_interval": [
+              [
+                0.06,
+                0.1
+              ],
+              [
+                0.1,
+                0.3
+              ],
+              [
+                0.3,
+                0.5
+              ],
+              [
+                0.5,
+                1
+              ]
+            ],
+            "stft_duration": 30,
+            "stft_overlap": 0,
+            "statistics": [
+              "mean",
+              "max",
+              "min",
+              "std",
+              "median"
+            ]
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_M1"
+        ]
+      },
+      {
+        "name": "signal_statistics_epoch",
+        "processing": {
+          "type": "signal_statistics",
+          "args": {
+            "window_duration": 30,
+            "statistics": [
+              "mean",
+              "max",
+              "min",
+              "std",
+              "median"
+            ]
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_M1"
+        ]
+      },
+      {
+        "name": "signal_statistics_sliding",
+        "processing": {
+          "type": "signal_statistics",
+          "args": {
+            "window_duration": 5,
+            "statistics": [
+              "mean",
+              "max",
+              "min",
+              "std",
+              "median"
+            ]
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_M1"
+        ]
+      }
+    ]
+  },
+  {
+    "dataset": "dodo",
+    "signals": [],
+    "features": [
+      {
+        "name": "spectral_power",
+        "processing": {
+          "type": "spectral_power",
+          "args": {
+            "frequency_interval": [
+              [
+                0.06,
+                0.1
+              ],
+              [
+                0.1,
+                0.3
+              ],
+              [
+                0.3,
+                0.5
+              ],
+              [
+                0.5,
+                1
+              ],
+              [
+                0.5,
+                2
+              ],
+              [
+                1.6,
+                4
+              ],
+              [
+                3,
+                4.5
+              ],
+              [
+                4,
+                7
+              ],
+              [
+                8,
+                13
+              ],
+              [
+                11,
+                16
+              ],
+              [
+                15,
+                30
+              ]
+            ],
+            "stft_duration": 5,
+            "stft_overlap": 3.5,
+            "statistics": [
+              "mean",
+              "max",
+              "min",
+              "std",
+              "median"
+            ]
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ],
+        "signals_preprocessing": [
+          {
+            "type": "",
+            "args": {}
+          }
+        ]
+      },
+      {
+        "name": "spectral_power_slow",
+        "processing": {
+          "type": "spectral_power",
+          "args": {
+            "frequency_interval": [
+              [
+                0.06,
+                0.1
+              ],
+              [
+                0.1,
+                0.3
+              ],
+              [
+                0.3,
+                0.5
+              ],
+              [
+                0.5,
+                1
+              ]
+            ],
+            "stft_duration": 30,
+            "stft_overlap": 0,
+            "statistics": [
+              "mean",
+              "max",
+              "min",
+              "std",
+              "median"
+            ]
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ],
+        "signals_preprocessing": [
+          {
+            "type": "",
+            "args": {}
+          }
+        ]
+      },
+      {
+        "name": "signal_statistics_epoch",
+        "processing": {
+          "type": "signal_statistics",
+          "args": {
+            "window_duration": 30,
+            "statistics": [
+              "mean",
+              "max",
+              "min",
+              "std",
+              "median"
+            ]
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ],
+        "signals_preprocessing": [
+          {
+            "type": "",
+            "args": {}
+          }
+        ]
+      },
+      {
+        "name": "signal_statistics_sliding",
+        "processing": {
+          "type": "signal_statistics",
+          "args": {
+            "window_duration": 5,
+            "statistics": [
+              "mean",
+              "max",
+              "min",
+              "std",
+              "median"
+            ]
+          }
+        },
+        "signals": [
+          "signals/eeg/F4_O2"
+        ],
+        "signals_preprocessing": [
+          {
+            "type": "",
+            "args": {}
+          }
+        ]
+      }
+    ]
+  }
+]

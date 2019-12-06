@@ -71,7 +71,7 @@ Fig 1. shows the overall inference pipeline, Fig 2. adds the Trainer and its ret
 
 ## Download of DOD-O and DOD-H
 
-DOD-O and DOD-H can be downloaded using the [Octave evaluation repository](https://github.com/Dreem-Organization/octave_evaluation). 
+DOD-O and DOD-H can be downloaded using the [Octave evaluation repository](https://github.com/Dreem-Organization/dreem-learning-evaluation). 
 The records will be queried from S3 and saved under .h5 format. Each h5 is in the following format:
 * Hypnogram: Array
 * Signals: 

@@ -15,7 +15,8 @@ for bucket_object in tqdm.tqdm(bucket_objects):
         Key=filename,
         Filename=DODO_SETTINGS["h5_directory"] + "/{}".format(filename)
     )
-
+    
+bucket_objects = client.list_objects(Bucket='dreem-dod-h')["Contents"]
 print("\n Downloading H5 files and annotations from S3 for DOD-H")
 for bucket_object in tqdm.tqdm(bucket_objects):
     filename = bucket_object["Key"]

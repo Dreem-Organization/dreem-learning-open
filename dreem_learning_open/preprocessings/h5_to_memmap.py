@@ -84,6 +84,7 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
         records) > 0, "No records found, check your data path in dreem_learning_open.settings"
 
     def process_record(record):
+        print(record)
         try:
             if isinstance(record, str):
                 record_name = os.path.basename(record).replace('.h5', '')

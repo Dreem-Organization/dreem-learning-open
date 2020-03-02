@@ -1,0 +1,32 @@
+{
+  "n_class": 5,
+  "type": "modulo_net",
+  "output_mode": "many",
+  "eval_output_mode": "many",
+  "encoders": {
+    "signals": {
+      "type": "SeqSleepEpochEncoder",
+      "args": {
+        "hidden_layers": 64,
+        "filter_dim": 32,
+        "dropout": 0.25,
+        "bidir": true
+      }
+    }
+  },
+  "reducer": {
+    "type": "AttentionReducer",
+    "args": {
+      "context_size": 64
+    }
+  },
+  "sequence_encoder": {
+    "type": "GRUSequenceEncoder",
+    "args": {
+      "cells": 64,
+      "dropout": 0.25,
+      "bidir": true,
+      "layers": 1
+    }
+  }
+}

@@ -188,7 +188,7 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
     # dump description
     json.dump(experiment_description,
               open(os.path.join(save_folder, "description.json"), "w"), indent=4)
-
+    padding = 0
     for group in groups_description:
         padding = groups_description[group]['padding'] // 30
 

@@ -39,6 +39,17 @@ folders_to_create = [
     DODO_SETTINGS['h5_directory'],
     DODO_SETTINGS['memmap_directory']
 ]
+MASS_SETTINGS = {
+    'h5_directory': BASE_DIRECTORY_H5 + 'mass/',
+    'memmap_directory': BASE_DIRECTORY_MEMMAP + 'mass/'
+}
+folders_to_create = [
+    DODH_SETTINGS['h5_directory'],
+    DODH_SETTINGS['memmap_directory'],
+    DODO_SETTINGS['h5_directory'],
+    DODO_SETTINGS['memmap_directory']
+]
+folders_to_create += [v for v in MASS_SETTINGS.values()]
 
 for folder in folders_to_create:
     if not os.path.exists(folder):

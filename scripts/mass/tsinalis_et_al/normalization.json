@@ -1,0 +1,14 @@
+{
+  "signals": [
+    {
+      "name": "signals",
+      "normalization": [
+        {
+          "type": "standardization",
+          "args": {}
+        }
+      ]
+    }
+  ],
+  "features": []
+}

@@ -1,0 +1,26 @@
+{
+  "n_class": 5,
+  "output_mode": "many",
+  "eval_output_mode": "many",
+  "type": "modulo_net",
+  "input_temporal_context": 3,
+  "encoders": {
+    "signals": {
+      "type": "TsinalisEpochEncoder",
+      "args": {}
+    }
+  },
+  "reducer": {
+    "type": "FlattenReducer",
+    "args": {}
+  },
+  "sequence_encoder": {
+    "type": "TemporalFlattener",
+    "args": {
+      "layers": [
+        50,
+        50
+      ]
+    }
+  }
+}

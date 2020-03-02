@@ -70,6 +70,12 @@ def resample(signal, signal_properties, target_frequency, interpolation_args={})
     signal_properties = {'fs': target_frequency, 'padding': signal_properties['padding']}
     return resampled_signal, signal_properties
 
+def weighted_sum(signal, signal_properties, weights=None):
+    if weights is None:
+        return np.sum(signal, -1, keepdims=True), signal_properties
+    else:
+        return np.sum(signal * np.array(weights), -1, keepdims=True), signal_properties
+
 
 def pad_signal(signal, signal_properties, padding_duration, value=0):
     if padding_duration == 0:
@@ -85,5 +91,6 @@ def pad_signal(signal, signal_properties, padding_duration, value=0):
 signal_processings = {
     'filter': filter,
     'resample': resample,
-    'padding': pad_signal
+    'padding': pad_signal,
+    'weighted_sum':weighted_sum
 }

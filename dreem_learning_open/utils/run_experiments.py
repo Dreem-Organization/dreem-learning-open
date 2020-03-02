@@ -14,7 +14,7 @@ def memmap_hash(memmap_description):
 
 
 def run_experiments(experiments, experiments_directory, output_directory, datasets,
-                    fold_to_run=None, force=True):
+                    fold_to_run=None, force=True, error_tolerant=False):
     for experiment in experiments:
         experiment_directory = os.path.join(experiments_directory, experiment)
         memmaps_description = json.load(open(os.path.join(experiment_directory, 'memmaps.json')))
@@ -23,7 +23,8 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
             if dataset in datasets:
                 del memmap_description['dataset']
                 exp_name = memmap_description.get('name', experiment)
-                dataset_parameters = json.load(open(os.path.join(experiment_directory, 'dataset.json')))
+                dataset_parameters = json.load(
+                    open(os.path.join(experiment_directory, 'dataset.json')))
                 for dataset_parameter in dataset_parameters:
                     if 'name' in dataset_parameter:
                         exp_name_bis = os.path.join(exp_name, dataset_parameter['name'])
@@ -50,7 +51,8 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
                                  os.listdir(dataset_setting['h5_directory'])],
                         memmap_description=memmap_description,
                         memmap_directory=dataset_setting['memmap_directory'],
-                        parallel=False)
+                        parallel=False,
+                        error_tolerant=error_tolerant)
                     dataset_dir = os.path.join(
                         dataset_setting['memmap_directory'],
                         description_hash
@@ -59,17 +61,21 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
                         os.path.join(dataset_dir, record) for record in
                         os.listdir(dataset_dir) if '.json' not in record
                     ]
-
                     # build the folds
                     rd.seed(2019)
                     rd.shuffle(available_dreem_records)
-                    if dataset == 'dodo':
-                        N_FOLDS = 10
+
+                    if dataset in ['dodo', 'mass_multi_channel', 'mass']:
+                        if dataset == 'dodo':
+                            N_FOLDS = 20
+                        if dataset in ['mass_multi_channel', 'mass']:
+                            N_FOLDS = 31
                         N_FOLDS = N_FOLDS - 1
                         FOLDS_SIZE = int(len(available_dreem_records) // N_FOLDS)
                         folds = [available_dreem_records[FOLDS_SIZE * x:FOLDS_SIZE * (x + 1)] for x
                                  in
                                  range(int(len(available_dreem_records) / FOLDS_SIZE + 1))]
+
                     else:
                         # LOOV training
                         folds = [[record] for record in available_dreem_records]
@@ -81,8 +87,10 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
                         if i in fold_to_run:
                             other_records = [record for record in available_dreem_records if
                                              record not in fold]
+                            rd.seed(2019 + i)
+                            rd.shuffle(other_records)
                             train_records, val_records, _ = train_test_val_split(other_records,
-                                                                                 0.75, 0.25,
+                                                                                 0.8, 0.2,
                                                                                  0,
                                                                                  seed=2019)
                             experiment_description = {

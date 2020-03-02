@@ -1,0 +1,41 @@
+{
+  "signals": [],
+  "features": [
+    {
+      "name": "spectral_power",
+      "normalization": [
+        {
+          "type": "standardization",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "name": "spectral_power_slow",
+      "normalization": [
+        {
+          "type": "standardization",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "name": "signal_statistics_epoch",
+      "normalization": [
+        {
+          "type": "standardization",
+          "args": {}
+        }
+      ]
+    },
+    {
+      "name": "signal_statistics_sliding",
+      "normalization": [
+        {
+          "type": "standardization",
+          "args": {}
+        }
+      ]
+    }
+  ]
+}

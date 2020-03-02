@@ -143,6 +143,7 @@ class ModuloNet(nn.Module):
         for group, encoder in self.groups_encoder.items():
             batch_size, temporal_context = x[group].size()[:2]
             features[group] = encoder(x[group])
+
         features = self.reducer(features)
         features = features.view((batch_size, temporal_context, -1))
         return features

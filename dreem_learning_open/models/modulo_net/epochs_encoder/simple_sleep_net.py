@@ -88,8 +88,6 @@ class SimpleSleepNetEpochEncoder(EpochEncoder):
         """
 
         batch_size, temporal_context, n_channels, n_filters, spectrogram_length = x.size()
-
-        x = x.view(batch_size, temporal_context, n_channels, n_filters, spectrogram_length)
         x = x.contiguous().view(
             (batch_size * temporal_context, n_channels, n_filters, spectrogram_length))
         x, hidden_states = self.encoder.forward(x)

@@ -1,0 +1,25 @@
+{
+  "type": "base",
+  "args": {
+    "epochs": 100,
+    "patience": 15,
+    "optimizer": {
+      "type": "adam",
+      "args": {
+        "lr": 1e-3
+      }
+    },
+    "regularization": [
+      {
+        "type": "L2",
+        "args": {
+          "lambda_reg": 1e-4,
+          "exclusions": [
+            "bn",
+            "bias"
+          ]
+        }
+      }
+    ]
+  }
+}

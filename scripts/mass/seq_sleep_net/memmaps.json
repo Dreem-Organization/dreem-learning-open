@@ -1,0 +1,158 @@
+[
+  {
+    "dataset": "mass_multi_channel",
+    "signals": [
+      {
+        "name": "signals",
+        "signals": [
+          {
+            "signals": [
+              "signals/eeg/c4",
+              "signals/eeg/o1"
+            ],
+            "processings": [
+              {
+                "type": "weighted_sum",
+                "args": {
+                  "weights": [
+                    1,
+                    -1
+                  ]
+                }
+              },
+              {
+                "type": "filter",
+                "args": {}
+              },
+              {
+                "type": "resample",
+                "args": {
+                  "target_frequency": 100
+                }
+              }
+            ]
+          },
+          {
+            "signals": [
+              "signals/eeg/f4",
+              "signals/eog/left horiz"
+            ],
+            "processings": [
+              {
+                "type": "weighted_sum",
+                "args": {
+                  "weights": [
+                    1,
+                    -1
+                  ]
+                }
+              },
+              {
+                "type": "filter",
+                "args": {}
+              },
+              {
+                "type": "resample",
+                "args": {
+                  "target_frequency": 100
+                }
+              }
+            ]
+          },
+          {
+            "signals": [
+              "signals/eeg/f8",
+              "signals/eeg/cz"
+            ],
+            "processings": [
+              {
+                "type": "weighted_sum",
+                "args": {
+                  "weights": [
+                    1,
+                    -1
+                  ]
+                }
+              },
+              {
+                "type": "filter",
+                "args": {}
+              },
+              {
+                "type": "resample",
+                "args": {
+                  "target_frequency": 100
+                }
+              }
+            ]
+          },
+          {
+            "signals": [
+              "signals/eog/right horiz",
+              "signals/eog/left horiz"
+            ],
+            "processings": [
+              {
+                "type": "weighted_sum",
+                "args": {
+                  "weights": [
+                    0.5,
+                    0.5
+                  ]
+                }
+              },
+              {
+                "type": "filter",
+                "args": {}
+              },
+              {
+                "type": "resample",
+                "args": {
+                  "target_frequency": 100
+                }
+              }
+            ]
+          },
+          {
+            "signals": [
+              "signals/emg/chin1",
+              "signals/emg/chin2"
+            ],
+            "processings": [
+              {
+                "type": "weighted_sum",
+                "args": {
+                  "weights": [
+                    0.5,
+                    0.5
+                  ]
+                }
+              },
+              {
+                "type": "filter",
+                "args": {}
+              },
+              {
+                "type": "resample",
+                "args": {
+                  "target_frequency": 100
+                }
+              }
+            ]
+          }
+        ],
+        "processings": [
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+  ]
+  }
+]

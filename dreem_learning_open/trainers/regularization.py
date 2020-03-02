@@ -65,7 +65,6 @@ class L2Regularizer(_Regularizer):
         for model_param_name, model_param_value in self.model.named_parameters():
             if True not in [exclusion in model_param_name for
                             exclusion in self.exclusions]:
-                print(model_param_name)
                 reg_loss_function += self.lambda_reg / 2 * L2Regularizer.__add_l2(
                     var=model_param_value)
         return reg_loss_function

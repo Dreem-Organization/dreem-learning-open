@@ -79,7 +79,6 @@ class FilterBankLayer(nn.Module):
         super().__init__()
         self.input_dim, self.filter_dim = input_dim, filter_dim
         w = lin_tri_filter_shape(filter_dim, (input_dim - 1)* 2 )
-        # w = tri_filter_shape(input_dim, filter_dim)
         w = np.expand_dims(w, 0)
         W = np.repeat(w, repeats=n_channels, axis=0)
         self.bn = nn.BatchNorm1d(num_features=filter_dim)
@@ -117,7 +116,7 @@ class FilterBankLayer(nn.Module):
         x = x.permute(1, 0, 3, 2)
         return x
 
-class SpectrogramEncoderNoBatchNorm(nn.Module):
+class SpectrogramEncoder(nn.Module):
 
     def __init__(self, input_dim=129, filter_dim=20, n_channels=1, hidden_layers=64, bidir=True,
                  dropout=0.25, dropout2d=0.):
@@ -148,7 +147,6 @@ class SpectrogramEncoderNoBatchNorm(nn.Module):
         """
         batch_size, n_channels, filter_size, spectrogram_length = x.shape
         x = self.filter_bank(x)
-
         x = x.contiguous().view(batch_size, -1, spectrogram_length).transpose(1, 2)
         x = self.dropout(x)
         x , _ = self.gru(x)
@@ -156,55 +154,6 @@ class SpectrogramEncoderNoBatchNorm(nn.Module):
         x = x.transpose(1, 2)
         return x
 
-class SpectrogramEncoder(nn.Module):
-
-    def __init__(self, input_dim=129, filter_dim=20, n_channels=1, hidden_layers=64, bidir=True,
-                 dropout=0.25, dropout2d=0.):
-        """
-        input_dim (int): size of the original filter bank
-        filter_dim (int): size of the fitted filter bank
-        n_channels (int): number of distinct signals (i.e. number of channels in the time-frequency representation)
-        context_size (int): context size of the attention module
-        hidden_layers (int): Hidden layers in the GRU module
-        bidir  (bool): Use bidirectionnal gru ?
-        """
-        super().__init__()
-        self.dropout = nn.Dropout(dropout)
-        self.dropout2D = nn.Dropout2d(dropout2d)
-        self.hidden_size = hidden_layers
-        self.num_layers = 1
-        self.filter_bank = FilterBankLayer(input_dim, filter_dim, n_channels)
-        self.gru_fwd = GRULayer(BNGRUCell, filter_dim * n_channels,
-                             self.hidden_size,
-                             30)
-        self.gru_bwd = GRULayer(BNGRUCell, filter_dim * n_channels,
-                             self.hidden_size,
-                             30)
-
-    def forward(self, x):
-        """
-        x (tensor : batch_size,n_channels,filter_bank_size,time) :
-                n_channels : number of signal (for instance EEG,EOG, EMG channels)
-                filter_bank_size : frequency resolution of the initial time-frequency representation
-                time: number of window/timesteps in the time-frequency representation
-        returns output (tensor: batch_size, context_size*(1+bidir)), attention weights (tensor: batch_size, Time)
-        """
-        batch_size, n_channels, filter_size, spectrogram_length = x.shape
-        x = self.filter_bank(x)
-
-        x = x.contiguous().view(batch_size, -1, spectrogram_length).transpose(1, 2).transpose(0, 1).contiguous()
-        x = self.dropout(x)
-
-        h = nn.Parameter(torch.zeros(1, self.hidden_size))
-        h = h.repeat((batch_size, 1)).to(x.device)
-        x_bwd = self.gru_bwd(x.flip(0),h)[0].flip(0)
-        x_fwd = self.gru_fwd(x,h)[0].flip(0)
-        x = torch.cat([x_bwd,x_fwd])
-
-        x = x.transpose(0, 1)
-        x = self.dropout(x)
-        x = x.transpose(1, 2)
-        return x
 
 
 class SeqSleepNetEpochEncoder(EpochEncoder):
@@ -227,7 +176,7 @@ class SeqSleepNetEpochEncoder(EpochEncoder):
 
     def init_encoder(self):
         n_channels, n_freq_filters, seq_length = tuple(self.group['encoder_input_shape'][2:])
-        self.encoder = SpectrogramEncoderNoBatchNorm(input_dim=n_freq_filters,
+        self.encoder = SpectrogramEncoder(input_dim=n_freq_filters,
                                           n_channels=n_channels,
                                           **self.net_parameters)
         self.output_size = self.net_parameters['hidden_layers'] * (

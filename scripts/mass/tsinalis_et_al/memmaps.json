@@ -1,6 +1,6 @@
 [
   {
-    "dataset": "mass_multi_channel",
+    "dataset": "mass",
     "signals": [
       {
         "name": "signals",

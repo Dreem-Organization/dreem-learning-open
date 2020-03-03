@@ -5,7 +5,6 @@ from torch import nn
 from dreem_learning_open.models.modulo_net.epochs_encoder.epoch_encoder import EpochEncoder
 from dreem_learning_open.models.modulo_net.modules.bn_lstm import LSTM, BNLSTMCell
 from torch.nn import GRU
-from dreem_learning_open.models.modulo_net.modules.bn_gru import GRULayer, BNGRUCell
 
 def tri_filter_shape(ndim, nfilter):
     """

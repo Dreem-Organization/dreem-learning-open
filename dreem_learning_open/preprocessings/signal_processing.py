@@ -49,6 +49,73 @@ def filter(signal, signal_properties):
     return signal, signal_properties
 
 
+def iir_bandpass_filter(signal,
+                        fs=250.,
+                        order=4,
+                        frequency_band=[0.4, 18],
+                        filter_type='butter',
+                        axis=-1,
+                        forward_backward=False):
+    """ Perform bandpass filtering using scipy library.
+
+    Parameters
+    ----------
+
+    signal : 1D numpy.array
+        Array to filter.
+    fs : float
+        Sampling frequency
+    order : int
+        Order of the filter
+    frequency_band : list
+        Specify bandpass eg: [0.5, 20] will keep frequencies between 0.5
+        and 20 Hz
+    filter_type : str
+        Choose type of IIR filter: butter, cheby1, cheby2, ellip, bessel
+    axis: int
+        Choose axis where to perform filtering.
+    forward_backward : boolean
+        Set True if you want a null phase shift filtered signal
+
+    Returns
+    -------
+
+        1D numpy.array
+            The signal filtered
+    """
+    b, a = iirfilter(order,
+                     [ff * 2. / fs for ff in frequency_band],
+                     btype='bandpass',
+                     ftype=filter_type)
+    if forward_backward:
+        result = filtfilt(b, a, signal, axis)
+    else:
+        result = lfilter(b, a, signal, axis)
+    return result
+
+
+def filter_cardio(signal, signal_properties):
+    signal = iir_bandpass_filter(signal,
+                                 fs=signal_properties['fs'],
+                                 order=2,
+                                 frequency_band=[0.6, 3],
+                                 filter_type='bessel',
+                                 axis=0,
+                                 forward_backward=False)
+    return signal, signal_properties
+
+
+def filter_respiration(signal, signal_properties):
+    signal = iir_bandpass_filter(signal,
+                                 fs=signal_properties['fs'],
+                                 order=2,
+                                 frequency_band=[0.1, 0.5],
+                                 filter_type='bessel',
+                                 axis=0,
+                                 forward_backward=False)
+    return signal, signal_properties
+
+
 def resample(signal, signal_properties, target_frequency, interpolation_args={}):
     signal_frequency = signal_properties['fs']
     resampling_ratio = signal_frequency / target_frequency
@@ -70,6 +137,7 @@ def resample(signal, signal_properties, target_frequency, interpolation_args={})
     signal_properties = {'fs': target_frequency, 'padding': signal_properties['padding']}
     return resampled_signal, signal_properties
 
+
 def weighted_sum(signal, signal_properties, weights=None):
     if weights is None:
         return np.sum(signal, -1, keepdims=True), signal_properties
@@ -90,7 +158,9 @@ def pad_signal(signal, signal_properties, padding_duration, value=0):
 
 signal_processings = {
     'filter': filter,
+    'filter_cardio': filter_cardio,
+    'filter_respiration': filter_respiration,
     'resample': resample,
     'padding': pad_signal,
-    'weighted_sum':weighted_sum
+    'weighted_sum': weighted_sum
 }

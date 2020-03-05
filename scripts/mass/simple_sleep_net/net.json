@@ -7,7 +7,7 @@
     "signals": {
       "type": "SimpleSleepEpochEncoder",
       "args": {
-        "hidden_layers": 50,
+        "hidden_layers": 25,
         "filter_dim": 30,
         "dropout": 0.5,
         "bidir": true
@@ -23,7 +23,7 @@
   "sequence_encoder": {
     "type": "ResidualGRUSequenceEncoder",
     "args": {
-      "cells": 50,
+      "cells": 25,
       "dropout": 0.5,
       "bidir": true,
       "layers": 2

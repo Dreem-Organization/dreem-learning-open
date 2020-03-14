@@ -3,6 +3,7 @@ dataset
 """
 import copy
 import json
+import os
 
 import numpy as np
 import torch
@@ -99,9 +100,9 @@ class DreemDataset(Dataset):
 
     def add_record(self, record):
         print('Adding: ', record)
-        with open(record + 'properties.json') as f:
+        with open(os.path.join(record, 'properties.json')) as f:
             record_description = json.load(f)
-        with open(record + 'features_description.json') as f:
+        with open(os.path.join(record, 'features_description.json')) as f:
             features_description = json.load(f)
 
         if len(self.groups_description) > 0:
@@ -118,18 +119,18 @@ class DreemDataset(Dataset):
         groups = record_description
         for group in groups:
             shape = tuple(groups[group]['shape'])
-            self.data[record][group] = np.memmap(record + 'signals/' + group + '.mm', mode='r',
+            self.data[record][group] = np.memmap(os.path.join(record, 'signals', group + '.mm'), mode='r',
                                                  dtype='float32',
                                                  shape=shape)
 
         for feature in self.features_description:
             shape = tuple(features_description[feature]['shape'])
-            self.features_data[record][feature] = np.memmap(record + 'features/' + feature + '.mm',
+            self.features_data[record][feature] = np.memmap(os.path.join(record, 'features', feature + '.mm'),
                                                             mode='r',
                                                             dtype='float32',
                                                             shape=shape)
 
-        self.hypnogram[record] = np.memmap(record + 'hypno.mm', mode='r', dtype='float32')
+        self.hypnogram[record] = np.memmap(os.path.join(record, 'hypno.mm'), mode='r', dtype='float32')
 
         # Compute window for training
         valid_window = np.where(self.hypnogram[record] != -1)[0]
@@ -199,9 +200,9 @@ class DreemDataset(Dataset):
         for group in self.groups:
             window_length = self.groups_description[group]['window_length']
             input_temporal_length = self.groups_description[group]['window_length'] * (
-                    self.input_temporal_dimension // 2)
+                self.input_temporal_dimension // 2)
             sample['groups'][group] = self.data[record][group][
-                                      start_idx * window_length - input_temporal_length:end_idx * window_length + input_temporal_length]
+                start_idx * window_length - input_temporal_length:end_idx * window_length + input_temporal_length]
             if self.input_temporal_dimension == 1:
                 sample['groups'][group] = sample['groups'][group].reshape(temporal_context,
                                                                           window_length, -1)

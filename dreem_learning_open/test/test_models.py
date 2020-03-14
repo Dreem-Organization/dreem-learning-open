@@ -49,11 +49,11 @@ signal_normalization_parameters = {"signals": [{
             {
                 'type': 'affine',
                 'args': {'gain': 1.5}
-            },
+        },
             {
                 'type': 'standardization',
                 'args': {}
-            }
+        }
         ]
 }], 'features': []}
 
@@ -62,11 +62,11 @@ models = [
         'n_class': 5,
         'type': 'modulo_net',
         'encoders': {"eeg-eog":
-            {
-                'type': "SeqSleepEpochEncoder",
-                'args': {'hidden_layers': 8, 'filter_dim': 8, 'bidir': True}
-            }
-        },
+                     {
+                         'type': "SeqSleepEpochEncoder",
+                         'args': {'hidden_layers': 8, 'filter_dim': 8, 'bidir': True}
+                     }
+                     },
         'reducer': {'type': 'FlattenReducer', 'args': {}},
         'sequence_encoder': {'type': 'DeepSleepNetResidualSequenceEncoder', 'args': {'cells': 16}}
     }, 'normalization': spectrogram_normalization_parameters},
@@ -74,11 +74,11 @@ models = [
         'n_class': 5,
         'type': 'modulo_net',
         'encoders': {"eeg-eog":
-            {
-                'type': "SimpleSleepNetEpochEncoderWithoutFrequencyReduction",
-                'args': {'hidden_layers': 8, 'bidir': True}
-            }
-        },
+                     {
+                         'type': "SimpleSleepNetEpochEncoderWithoutFrequencyReduction",
+                         'args': {'hidden_layers': 8, 'bidir': True}
+                     }
+                     },
         'reducer': {'type': 'FlattenReducer', 'args': {}},
         'sequence_encoder': {'type': 'LSTMSequenceEncoder', 'args': {'cells': 16}}
     }, 'normalization': spectrogram_normalization_parameters},
@@ -86,11 +86,11 @@ models = [
         'n_class': 5,
         'type': 'modulo_net',
         'encoders': {"eeg-eog":
-            {
-                'type': "SimpleSleepNetEpochEncoderWithoutChannelRecombination",
-                'args': {'hidden_layers': 8, 'bidir': True}
-            }
-        },
+                     {
+                         'type': "SimpleSleepNetEpochEncoderWithoutChannelRecombination",
+                         'args': {'hidden_layers': 8, 'bidir': True}
+                     }
+                     },
         'reducer': {'type': 'FlattenReducer', 'args': {}},
         'sequence_encoder': {'type': 'LSTMSequenceEncoder', 'args': {'cells': 16}}
     }, 'normalization': spectrogram_normalization_parameters},
@@ -102,11 +102,11 @@ models += [
         'n_class': 5,
         'type': 'modulo_net',
         'encoders': {"eeg-eog":
-            {
-                'type': "DeepSleepEpochEncoder",
-                'args': {'cells': 16}
-            }
-        },
+                     {
+                         'type': "DeepSleepEpochEncoder",
+                         'args': {'cells': 16}
+                     }
+                     },
         'reducer': {'type': 'AttentionReducer', 'args': {'context_size': 8}},
         'sequence_encoder': {'type': 'LSTMSequenceEncoder', 'args': {'cells': 16}}
     }, 'normalization': signal_normalization_parameters},
@@ -114,11 +114,11 @@ models += [
         'n_class': 5,
         'type': 'modulo_net',
         'encoders': {"eeg-eog":
-            {
-                'type': "ChambonEpochEncoder",
-                'args': {}
-            }
-        },
+                     {
+                         'type': "ChambonEpochEncoder",
+                         'args': {}
+                     }
+                     },
         "reducer": {
             "type": "FlattenReducer",
             "args": {}
@@ -127,17 +127,16 @@ models += [
             "type": "TemporalFlattener",
             "args": {}
         }
-    }, 'normalization': signal_normalization_parameters}
-    ,
+    }, 'normalization': signal_normalization_parameters},
     {'net_parameters': {
         'n_class': 5,
         'type': 'modulo_net',
         'encoders': {"eeg-eog":
-            {
-                'type': "TsinalisEpochEncoder",
-                'args': {}
-            }
-        },
+                     {
+                         'type': "TsinalisEpochEncoder",
+                         'args': {}
+                     }
+                     },
         "reducer": {
             "type": "FlattenReducer",
             "args": {}
@@ -154,11 +153,11 @@ models += [{'net_parameters': {
     'n_class': 5,
     'type': 'modulo_net',
     'encoders': {"eeg-eog":
-        {
-            'type': "SimpleSleepEpochEncoder",
-            'args': {'hidden_layers': 8, 'filter_dim': 8, 'bidir': True}
-        }
-    },
+                 {
+                     'type': "SimpleSleepEpochEncoder",
+                     'args': {'hidden_layers': 8, 'filter_dim': 8, 'bidir': True}
+                 }
+                 },
     'reducer': {'type': 'PoolReducer', 'args': {'pool_operation': 'max'}},
     'sequence_encoder': {'type': 'GRUSequenceEncoder', 'args': {'cells': 16}}
 }, 'normalization': spectrogram_normalization_parameters},

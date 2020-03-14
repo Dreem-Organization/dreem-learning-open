@@ -82,7 +82,7 @@ def generate_memmaps(n_memmaps, record_description, memmaps_description, erase=T
 
     if erase:
         if not os.path.exists('/tmp/fake_memmmaps/'):
-            os.makedirs('/tmp/fake_memmmaps//')
+            os.makedirs('/tmp/fake_memmmaps/')
         else:
             shutil.rmtree('/tmp/fake_memmmaps/')
             os.makedirs('/tmp/fake_memmmaps/')
@@ -92,12 +92,15 @@ def generate_memmaps(n_memmaps, record_description, memmaps_description, erase=T
 
     # generate fake_memmaps
     records = ['/tmp/fake_dataset/record_' + str(i) + '.h5' for i in range(dataset_size)]
-    memmaps_dir = \
-    h5_to_memmaps(records, '/tmp/fake_memmmaps/', memmaps_description, parallel=False, force=True)[
-        0]
+    memmaps_dir = h5_to_memmaps(
+        records,
+        '/tmp/fake_memmmaps/',
+        memmaps_description,
+        parallel=False,
+        force=True)[0]
     shutil.rmtree('/tmp/fake_dataset/')
 
     # build dataset
-    memmaps = [memmaps_dir + filename + '/' for filename in os.listdir(memmaps_dir) if
+    memmaps = [os.path.join(memmaps_dir, filename) for filename in os.listdir(memmaps_dir) if
                '.' not in filename]
     return memmaps

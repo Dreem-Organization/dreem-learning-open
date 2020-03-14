@@ -16,42 +16,49 @@ def memmap_hash(memmap_description):
 def run_experiments(experiments, experiments_directory, output_directory, datasets,
                     fold_to_run=None, force=True):
     for experiment in experiments:
-        experiment_directory = experiments_directory + experiment + '/'
-        memmaps_description = json.load(open(experiment_directory + 'memmaps.json'))
+        experiment_directory = os.path.join(experiments_directory, experiment)
+        memmaps_description = json.load(open(os.path.join(experiment_directory, 'memmaps.json')))
         for memmap_description in memmaps_description:
             dataset = memmap_description['dataset']
             if dataset in datasets:
                 del memmap_description['dataset']
                 exp_name = memmap_description.get('name', experiment)
-                dataset_parameters = json.load(open(experiment_directory + 'dataset.json'))
+                dataset_parameters = json.load(open(os.path.join(experiment_directory, 'dataset.json')))
                 for dataset_parameter in dataset_parameters:
                     if 'name' in dataset_parameter:
-                        exp_name_bis = f"{exp_name}/{dataset_parameter['name']}"
+                        exp_name_bis = os.path.join(exp_name, dataset_parameter['name'])
                     else:
                         exp_name_bis = exp_name
                     dataset_setting = datasets[dataset]
-                    save_folder = f"{output_directory}/{dataset}/{exp_name_bis}/"
+                    save_folder = os.path.split(output_directory, dataset, exp_name_bis)
                     if os.path.exists(save_folder) and force:
                         shutil.rmtree(save_folder)
 
-                    normalization = json.load(open(experiment_directory + 'normalization.json'))
-                    trainer = json.load(open(experiment_directory + 'trainer.json'))
-                    transform = json.load(open(experiment_directory + 'transform.json'))
-                    net = json.load(open(experiment_directory + 'net.json'))
+                    normalization = json.load(
+                        open(os.path.join(experiment_directory, 'normalization.json')))
+                    trainer = json.load(open(os.path.join(experiment_directory, 'trainer.json')))
+                    transform = json.load(
+                        open(os.path.join(experiment_directory, 'transform.json')))
+                    net = json.load(open(os.path.join(experiment_directory, 'net.json')))
 
                     temporal_context = dataset_parameter['temporal_context']
                     temporal_context_mode = dataset_parameter['temporal_context_mode']
 
                     description_hash = memmap_hash(memmap_description)
                     h5_to_memmaps(
-                        records=[dataset_setting['h5_directory'] + record for record in
+                        records=[os.path.join(dataset_setting['h5_directory'], record) for record in
                                  os.listdir(dataset_setting['h5_directory'])],
                         memmap_description=memmap_description,
                         memmap_directory=dataset_setting['memmap_directory'],
                         parallel=False)
-                    dataset_dir = dataset_setting['memmap_directory'] + description_hash + '/'
-                    available_dreem_records = [dataset_dir + record + '/' for record in
-                                               os.listdir(dataset_dir) if '.json' not in record]
+                    dataset_dir = os.path.join(
+                        dataset_setting['memmap_directory'],
+                        description_hash
+                    )
+                    available_dreem_records = [
+                        os.path.join(dataset_dir, record) for record in
+                        os.listdir(dataset_dir) if '.json' not in record
+                    ]
 
                     # build the folds
                     rd.seed(2019)
@@ -95,8 +102,7 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
                                     'transform_parameters': transform
 
                                 },
-                                'save_folder': f"{output_directory}/{dataset}/{exp_name_bis}/"
-
+                                'save_folder': os.path.join(output_directory, dataset, exp_name_bis),
                             }
 
                             log_experiment(**experiment_description, parralel=True,

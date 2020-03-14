@@ -31,7 +31,7 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
     if net_parameters == checkpoint:
         assert net_parameters is not None, 'Either the net parameters or an experiment to preload have to be provided'
 
-    save_folder = save_folder + '/' + experiment_id + '/'
+    save_folder = os.path.join(save_folder, experiment_id)
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
 
@@ -40,33 +40,34 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
                 'begin': int(time.time()), 'end': None, 'experiment_id': experiment_id
                 }
     if 'records_name' not in dataset_settings:
-        records = [dataset_settings['h5_directory'] + record for record in
+        records = [os.path.join(dataset_settings['h5_directory'], record) for record in
                    os.listdir(dataset_settings['h5_directory'])]
     else:
-        records = [dataset_settings['h5_directory'] + record for record in
+        records = [os.path.join(dataset_settings['h5_directory'], record) for record in
                    dataset_settings['records_name']]
 
     if generate_memmaps:
         memmaps_directory, groups_description, features_description = h5_to_memmaps(
             records=records,
             memmap_description=memmap_description,
-            memmap_directory=dataset_settings[
-                'memmap_directory'],
+            memmap_directory=dataset_settings['memmap_directory'],
             parallel=parralel)
 
-        memmap_records = [memmaps_directory + record + '/' for record in
+        memmap_records = [os.path.join(memmaps_directory, record) for record in
                           os.listdir(memmaps_directory) if '.' not in record]
 
     else:
-        memmaps_directory = dataset_settings['memmap_directory'] + memmap_hash(
-            memmap_description) + '/'
-        groups_description = json.load(open(memmaps_directory + 'groups_description.json', 'r'))
-        features_description = json.load(open(memmaps_directory + 'features_description.json', 'r'))
+        memmaps_directory = os.path.join(dataset_settings['memmap_directory'], memmap_hash(
+            memmap_description))
+        groups_description = json.load(
+            open(os.path.join(memmaps_directory, 'groups_description.json'), 'r'))
+        features_description = json.load(
+            open(os.path.join(memmaps_directory, 'features_description.json'), 'r'))
 
     if isinstance(dataset_parameters['split']['train'], list):
-        train_records, test_records, validation_records = dataset_parameters['split']['train'], \
-                                                          dataset_parameters['split']['test'], \
-                                                          dataset_parameters['split']['val']
+        train_records, test_records, validation_records = (dataset_parameters['split']['train'],
+                                                           dataset_parameters['split']['test'],
+                                                           dataset_parameters['split']['val'])
     else:
         train_records, test_records, validation_records = train_test_val_split(memmap_records,
                                                                                **dataset_parameters[
@@ -112,14 +113,14 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
         'records_split': None,
     }
     json.dump(experiment_description,
-              open(save_folder + "description.json", "w"), indent=4)
+              open(os.path.join(save_folder, "description.json"), "w"), indent=4)
 
     if checkpoint is not None:
         assert 'directory' in checkpoint, 'The directory of the experiment to load has to be provided'
         assert 'net_to_load' in checkpoint, 'The net to load has to be provided'
-        shutil.copytree(checkpoint['directory'], save_folder + 'base_experiment/')
+        shutil.copytree(checkpoint['directory'], os.path.join(save_folder, 'base_experiment'))
         net = ModuloNet.load(
-            checkpoint['directory'] + checkpoint['net_to_load'])
+            os.path.join(checkpoint['directory'], checkpoint['net_to_load']))
 
         if 'trainable_layers' in checkpoint:
             for name, param in net.named_parameters():
@@ -127,7 +128,7 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
                     print("Freezing: ", name)
                     param.requires_grad = False
 
-        with open(checkpoint['directory'] + "description.json", "r") as desc_json:
+        with open(os.path.join(checkpoint['directory'], "description.json"), "r") as desc_json:
             net_parameters = json.load(desc_json)['net_parameters']
         print('Load net with parameters:', net_parameters)
 
@@ -140,31 +141,30 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
                         normalization_parameters=normalization_parameters_init,
                         net_parameters=net_parameters)
 
-    trainer_save_folder = save_folder + 'training/'
+    trainer_save_folder = os.path.join(save_folder, 'training')
     if not os.path.exists(trainer_save_folder):
         os.makedirs(trainer_save_folder)
 
     trainer = Trainer(net=net, save_folder=trainer_save_folder,
-                      **trainer_parameters['args']
-                      )
+                      **trainer_parameters['args'])
 
     trainer.train(train_dataset=dataset_train, validation_dataset=dataset_validation)
 
     metadata['end'] = int(time.time())
 
-    best_net = ModuloNet.load(trainer_save_folder + 'best_net')
+    best_net = ModuloNet.load(os.path.join(trainer_save_folder, 'best_net'))
     trainer = Trainer(net=best_net, save_folder=trainer_save_folder,
                       **trainer_parameters['args'])
 
     performance_on_test_set, _, performance_per_records, hypnograms = trainer.validate(dataset_test,
                                                                                        return_metrics_per_records=True)
-    performance_per_records = {record.split('/')[-2]: metric for record, metric in
+    performance_per_records = {os.path.split(record)[-2]: metric for record, metric in
                                performance_per_records.items()}
 
     records_split = {
-        'train_records': [record.split('/')[-2] for record in train_records],
-        'validation_records': [record.split('/')[-2] for record in validation_records],
-        'test_records': [record.split('/')[-2] for record in test_records]
+        'train_records': [os.path.split(record)[-2] for record in train_records],
+        'validation_records': [os.path.split(record)[-2] for record in validation_records],
+        'test_records': [os.path.split(record)[-2] for record in test_records]
     }
     # experiment_description
     experiment_description = {
@@ -187,7 +187,7 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
 
     # dump description
     json.dump(experiment_description,
-              open(save_folder + "description.json", "w"), indent=4)
+              open(os.path.join(save_folder, "description.json"), "w"), indent=4)
 
     for group in groups_description:
         padding = groups_description[group]['padding'] // 30
@@ -198,15 +198,15 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
         hypnograms = {k: x['predicted'] for k, x in hypnograms.items()}
 
     json.dump(hypnograms,
-              open(save_folder + "hypnograms.json", "w"), indent=4)
+              open(os.path.join(save_folder, "hypnograms.json"), "w"), indent=4)
 
-    best_net.save(save_folder + 'best_model.gz')
+    best_net.save(os.path.join(save_folder, 'best_model.gz'))
 
     return save_folder
 
 
 def inference_on_dataset(records, experiment_folder, return_prob=False):
-    with open(experiment_folder + 'description.json', 'r') as f:
+    with open(os.path.join(experiment_folder, 'description.json'), 'r') as f:
         experiment_description = json.load(f)
         groups_description = experiment_description['groups_description']
         features_description = experiment_description['features_description']
@@ -214,7 +214,7 @@ def inference_on_dataset(records, experiment_folder, return_prob=False):
             padding = groups_description[group]['padding'] // 30
         dataset_parameters = experiment_description['dataset_parameters']
 
-    net = ModuloNet.load(experiment_folder + 'best_model.gz')
+    net = ModuloNet.load(os.path.join(experiment_folder, 'best_model.gz'))
 
     def count_parameters(model):
         return sum(p.numel() for p in model.parameters())

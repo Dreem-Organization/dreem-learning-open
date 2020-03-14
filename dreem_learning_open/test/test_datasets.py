@@ -5,12 +5,12 @@ import numpy as np
 import pytest
 import torch
 
-from ..datasets.dataset import DreemDataset
-from .descriptions import three_groups_record_description, memmaps_description_nested, \
+from dreem_learning_open.datasets.dataset import DreemDataset
+from dreem_learning_open.test.descriptions import three_groups_record_description, memmaps_description_nested, \
     expected_properties, \
     augmentation_pipeline_nested, \
     memmaps_description_bis, augmentation_pipeline_nested_wrong, groups_description
-from .utils import generate_memmaps
+from dreem_learning_open.test.utils import generate_memmaps
 
 
 def test_dataset_base():
@@ -34,7 +34,7 @@ def test_dataset_base():
     fake_dataset = DreemDataset(groups, features_description={}, records=memmaps,
                                 temporal_context=temporal_context)
 
-    ## Basic test on shape
+    # Basic test on shape
 
     # All the record have
     assert len(fake_dataset.records) == dataset_size, 'Not the right number of records'
@@ -43,25 +43,26 @@ def test_dataset_base():
         expected_shape = (
             temporal_context, expected_properties[group]['shape'][1],
             30 * expected_properties[group]['fs'])
-        assert fake_dataset[0]['groups'][
-                   group].size() == expected_shape, 'Group do not have the right shape'
+        assert (fake_dataset[0]['groups'][group].size() == expected_shape,
+                'Group do not have the right shape')
 
     assert torch.max(fake_dataset[0]['hypnogram']) >= 0, 'Some hypnogram have no valid values'
     assert fake_dataset[0]['hypnogram'].size() == (
-    temporal_context,), 'The hypnogram does not have the right shape'
+        temporal_context,), 'The hypnogram does not have the right shape'
 
     for record in fake_dataset.record_index:
         idx_begin, idx_end = fake_dataset.record_index[record][0], \
-                             fake_dataset.record_index[record][1]
+            fake_dataset.record_index[record][1]
         record_length = int(
             np.sum(fake_dataset.hypnogram[record][
                    temporal_context // 2 + 1:-temporal_context // 2 - 1] > - 1))
 
         assert idx_end - idx_begin + 1 == record_length, 'Start and end index of the record is wrong'
 
-        current_record_hypnogram = np.memmap(record + 'hypno.mm', mode='r', dtype='float32')
-        current_record_signals = os.listdir(record + 'signals/')
-        signals_memmap = {signal.replace('.mm', ''): record + 'signals/' + signal for signal in
+        current_record_hypnogram = np.memmap(os.path.join(
+            record, 'hypno.mm'), mode='r', dtype='float32')
+        current_record_signals = os.listdir(os.path.join(record, 'signals'))
+        signals_memmap = {signal.replace('.mm', ''): os.path.join(record, 'signals', signal) for signal in
                           current_record_signals}
         signals_memmap = {
             group_name: np.memmap(group_path, dtype='float32', mode='r',
@@ -71,16 +72,16 @@ def test_dataset_base():
 
         # validation on the record content
         for i in range(current_record_hypnogram.shape[0]):
-            ## assert that the output hypnogram is what we expect
+            # assert that the output hypnogram is what we expect
             if current_record_hypnogram[i] != -1:
                 # if np.random.uniform()<0.05:
-                hypno_dataset = fake_dataset[idx_begin + valid_epoch][
-                    'hypnogram'].cpu().float().numpy()
+                hypno_dataset = fake_dataset[idx_begin +
+                                             valid_epoch]['hypnogram'].cpu().float().numpy()
                 hypno_memmap = current_record_hypnogram[
-                               i - temporal_context // 2:i + temporal_context // 2 + 1]
+                    i - temporal_context // 2:i + temporal_context // 2 + 1]
                 assert (hypno_dataset == hypno_memmap).all(), 'The value in the hypnogram are wrong'
 
-                ## check that the input is what we want too:
+                # check that the input is what we want too:
 
                 for group in groups:
                     X_dataset = fake_dataset[idx_begin + valid_epoch]['groups'][
@@ -88,8 +89,8 @@ def test_dataset_base():
                     X_dataset = X_dataset.transpose(0, 2, 1).reshape(-1, X_dataset.shape[1])
                     epoch_length = expected_properties[group]['fs'] * 30
                     X_memmap = signals_memmap[group][
-                               epoch_length * (i - temporal_context // 2):epoch_length * (
-                                       i + temporal_context // 2 + 1)]
+                        epoch_length * (i - temporal_context // 2):epoch_length * (
+                            i + temporal_context // 2 + 1)]
                     assert (X_dataset == X_memmap).all(), 'The value in the dataset are wrong'
 
                 valid_epoch += 1
@@ -142,9 +143,9 @@ def test_get_record():
     for record in fake_dataset.records:
 
         # load the file of the current record
-        current_record_hypnogram = np.memmap(record + 'hypno.mm', mode='r', dtype='float32')
-        current_record_signals = os.listdir(record + 'signals/')
-        signals_memmap = {signal.replace('.mm', ''): record + 'signals/' + signal for signal in
+        current_record_hypnogram = np.memmap(record + '/hypno.mm', mode='r', dtype='float32')
+        current_record_signals = os.listdir(record + '/signals/')
+        signals_memmap = {signal.replace('.mm', ''): record + '/signals/' + signal for signal in
                           current_record_signals}
         signals_memmap = {
             group_name: np.memmap(group_path, dtype='float32', mode='r',
@@ -163,15 +164,15 @@ def test_get_record():
                 # Built th batch by hand
                 batch_by_hand['hypnogram'] += [np.expand_dims(
                     current_record_hypnogram[
-                    i - temporal_context // 2:i + temporal_context // 2 + 1], 0)]
+                        i - temporal_context // 2:i + temporal_context // 2 + 1], 0)]
 
                 # check that the input is what we want too:
 
                 for group in groups:
                     epoch_length = expected_properties[group]['fs'] * 30
                     X_memmap = signals_memmap[group][
-                               epoch_length * (i - temporal_context // 2):epoch_length * (
-                                       i + temporal_context // 2 + 1)]
+                        epoch_length * (i - temporal_context // 2):epoch_length * (
+                            i + temporal_context // 2 + 1)]
                     X_memmap = np.expand_dims(X_memmap, axis=0)
                     X_memmap = X_memmap.reshape((1, temporal_context, epoch_length, -1)).transpose(
                         (0, 1, 3, 2))
@@ -273,8 +274,8 @@ def test_different_memmaps_dataset():
     memmaps_2 = generate_memmaps(dataset_size, three_groups_record_description,
                                  memmaps_description_bis, erase=False)
     with pytest.raises(AssertionError, match='Invalid group shape'):
-        dataset = DreemDataset(groups, features_description={}, records=memmaps_1 + memmaps_2,
-                               temporal_context=temporal_context)
+        DreemDataset(groups, features_description={}, records=memmaps_1 + memmaps_2,
+                     temporal_context=temporal_context)
 
     try:
         shutil.rmtree('/tmp/fake_memmmaps/')

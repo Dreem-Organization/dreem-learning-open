@@ -1,6 +1,7 @@
 import copy
 import time
 import json
+import os
 from .regularization import regularizers
 import numpy as np
 from torch.utils.data import DataLoader
@@ -111,7 +112,7 @@ class Trainer:
             hypnogram_target = validation_dataset.hypnogram[record]
             hypnogram_predicted = predictions[record]
 
-            hypnograms[record.split('/')[-2]] = {
+            hypnograms[os.path.split(record)[-2]] = {
                 'predicted': hypnogram_predicted.astype(int).tolist(),
                 'target': hypnogram_target.astype(int).tolist()}
             record_weights += [np.sum(hypnogram_target >= 0)]

@@ -36,7 +36,7 @@ def processs_group(h5, group_description, truncate_to_second=None):
 
             if truncate_to_second:
                 sig_duration = (len(signals[-1]) // signals_properties[-1]['fs']) * \
-                               signals_properties[-1]['fs']
+                    signals_properties[-1]['fs']
                 sig_duration = int(sig_duration)
                 signals[-1] = signals[-1][:sig_duration]
 
@@ -66,7 +66,7 @@ def compute_epoch_features(h5, features_description, signals):
     for signal in signals:
         signals_tp += [np.expand_dims(h5[signal][:], -1)]
         signals_properties = {'fs': record_description[signal]['fs'], 'padding': 0,
-                              'filename': (h5.filename).split('/')[-1].replace('.h5', '')}
+                              'filename': os.path.basename(h5.filename).replace('.h5', '')}
     signals_tp = np.concatenate(signals_tp, -1)
     if 'signals_preprocessing' in features_description:
         for operation in features_description['signals_preprocessing']:
@@ -86,25 +86,25 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
     def process_record(record):
         try:
             if isinstance(record, str):
-                record_name = (record).split('/')[-1].replace('.h5', '')
+                record_name = os.path.basename(record).replace('.h5', '')
             elif isinstance(record, h5py.File):
-                record_name = (record.filename).split('/')[-1].replace('.h5', '')
+                record_name = os.path.basename(record.filename).replace('.h5', '')
 
-            save_directory = memmap_directory + pipeline_hash + '/' + record_name + '/'
+            save_directory = os.path.join(memmap_directory, pipeline_hash, record_name)
             if not os.path.exists(save_directory):  # create it
-                os.makedirs(save_directory + 'signals')
-                os.makedirs(save_directory + 'features')
+                os.makedirs(os.path.join(save_directory, 'signals'))
+                os.makedirs(os.path.join(save_directory, 'features'))
             else:
                 if force is True:  # recompute anyway
                     shutil.rmtree(save_directory)
                 elif len(os.listdir(save_directory)) != 5:  # corrupted or not finished
                     shutil.rmtree(save_directory)
-                    os.makedirs(save_directory + 'signals')
-                    os.makedirs(save_directory + 'features')
+                    os.makedirs(os.path.join(save_directory, 'signals'))
+                    os.makedirs(os.path.join(save_directory, 'features'))
                 else:  # do not recompute
                     return
 
-            if not os.path.isfile(save_directory + 'properties.json'):
+            if not os.path.isfile(os.path.join(save_directory, 'properties.json')):
                 with h5py.File(record, 'r') if isinstance(record, str) else record as h5:
                     signals_duration = None
                     # processing signals
@@ -130,7 +130,7 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
                         for group_name, group in groups['properties'].items():
                             group_fs = group['fs']
                             groups['signals'][group_name] = groups['signals'][group_name][
-                                                            :(min_duration * group_fs)]
+                                :(min_duration * group_fs)]
                             group['shape'] = groups['signals'][group_name].shape
                             durations += [group['shape'][0] // group['fs']]
 
@@ -152,9 +152,9 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
                     for feature in computed_features:
                         if signals_duration is not None:
                             assert feature['value'].shape[
-                                       0] == signals_duration // 30, 'Invalid features_data shape for ' + \
-                                                                     feature[
-                                                                         'name']
+                                0] == signals_duration // 30, 'Invalid features_data shape for ' + \
+                                feature[
+                                'name']
                             durations += [feature['value'].shape[0] * 30]
                         else:
                             durations += [feature['value'].shape[0] * 30]
@@ -186,7 +186,7 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
                     for feature in computed_features:
                         features_description[feature['name']] = {"shape": feature['value'].shape}
                         feature_arr = np.memmap(
-                            save_directory + 'features/' + feature['name'] + '.mm',
+                            os.path.join(save_directory, 'features', feature['name'] + '.mm'),
                             dtype='float32',
                             mode='w+',
                             shape=feature['value'].shape)
@@ -194,7 +194,7 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
 
                     for group_name, group in groups['signals'].items():
                         if hypnogra_provided:
-                            group_arr = np.memmap(save_directory + 'signals/' + group_name + '.mm',
+                            group_arr = np.memmap(os.path.join(save_directory, 'signals', group_name + '.mm'),
                                                   dtype='float32',
                                                   mode='w+',
                                                   shape=group.shape)
@@ -205,21 +205,21 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
                             shape['shape'] = (
                                 truncated_duration * groups['properties'][group_name]['fs'] * 30,
                                 *shape['shape'][1:])
-                            group_arr = np.memmap(save_directory + 'signals/' + group_name + '.mm',
+                            group_arr = np.memmap(os.path.join(save_directory, 'signals', group_name + '.mm'),
                                                   dtype='float32',
                                                   mode='w+',
                                                   shape=shape['shape'])
                             group_arr[:] = group[:shape['shape'][0]]
 
-                    hypnogram_memmap = np.memmap(save_directory + 'hypno' + '.mm', dtype='float32',
+                    hypnogram_memmap = np.memmap(os.path.join(save_directory, 'hypno' + '.mm'), dtype='float32',
                                                  mode='w+',
                                                  shape=hypnogram.shape)
                     hypnogram_memmap[:] = hypnogram
 
-                    with open(save_directory + 'features_description.json', 'w') as f:
+                    with open(os.path.join(save_directory, 'features_description.json'), 'w') as f:
                         json.dump(features_description, f, indent=2)
 
-                    with open(save_directory + 'properties.json', 'w') as f:
+                    with open(os.path.join(save_directory, 'properties.json'), 'w') as f:
                         json.dump(groups['properties'], f, indent=2)
         except OSError:
             shutil.rmtree(save_directory)
@@ -233,8 +233,8 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
             else:
                 raise e
 
-    if not os.path.exists(memmap_directory + pipeline_hash):
-        os.makedirs(memmap_directory + pipeline_hash)
+    if not os.path.exists(os.path.join(memmap_directory, pipeline_hash)):
+        os.makedirs(os.path.join(memmap_directory, pipeline_hash))
 
     if parallel is True:
         print('###########################')
@@ -245,29 +245,29 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
             process_record(record)
 
     groups_description = []
-    for record_name in os.listdir(memmap_directory + pipeline_hash):
+    for record_name in os.listdir(os.path.join(memmap_directory, pipeline_hash)):
         if '.' not in record_name:
-            save_directory = memmap_directory + pipeline_hash + '/' + record_name + '/'
-            with open(save_directory + 'properties.json') as f:
+            save_directory = os.path.join(memmap_directory, pipeline_hash, record_name)
+            with open(os.path.join(save_directory, 'properties.json')) as f:
                 record_description = json.load(f)
                 groups_description += [
                     get_group_description_from_record_description(record_description)]
 
-            with open(save_directory + 'features_description.json') as f:
+            with open(os.path.join(save_directory, 'features_description.json')) as f:
                 features_description = json.load(f)
                 for feature in features_description:
                     features_description[feature]['shape'] = features_description[feature]['shape'][
-                                                             1:]
+                        1:]
 
     groups_description_hash = [hash(json.dumps(d)) for d in groups_description]
     assert len(np.unique(groups_description_hash)) == 1
-    with open(memmap_directory + pipeline_hash + '/' + 'groups_description.json', 'w') as f:
+    with open(os.path.join(memmap_directory, pipeline_hash, 'groups_description.json'), 'w') as f:
         json.dump(groups_description[0], f, indent=2)
 
-    with open(memmap_directory + pipeline_hash + '/' + 'features_description.json', 'w') as f:
+    with open(os.path.join(memmap_directory, pipeline_hash, 'features_description.json'), 'w') as f:
         json.dump(features_description, f, indent=2)
 
-    with open(memmap_directory + pipeline_hash + '/' + 'memmap_description.json', 'w') as f:
+    with open(os.path.join(memmap_directory, pipeline_hash, 'memmap_description.json'), 'w') as f:
         json.dump(memmap_description, f, indent=2)
 
-    return memmap_directory + pipeline_hash + '/', groups_description[0], features_description
+    return os.path.join(memmap_directory, pipeline_hash), groups_description[0], features_description

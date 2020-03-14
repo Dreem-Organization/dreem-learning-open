@@ -64,17 +64,17 @@ def test_memmap_with_features_only():
     generate_fake_record(three_groups_record_description)
     memmaps_description = features_memmap
     record_directory = \
-    h5_to_memmaps(['/tmp/fake.h5'], '/tmp/memmap_test/', memmap_description=memmaps_description,
-                  parallel=False)[0]
+        h5_to_memmaps(['/tmp/fake.h5'], '/tmp/memmap_test/', memmap_description=memmaps_description,
+                      parallel=False)[0]
 
     record_directory = record_directory + \
-                       [record for record in os.listdir(record_directory) if '.' not in record][
-                           0] + '/'
-    with open(record_directory + 'features_description.json') as f:
+        ["/" + record for record in os.listdir(record_directory) if '.' not in record][
+            0] + '/'
+    with open(record_directory + '/features_description.json') as f:
         features_description = json.load(f)
 
     shape = tuple(features_description['epoch_cycle_index']['shape'])
-    computed_epoch_cycle_index = np.memmap(record_directory + 'features/epoch_cycle_index.mm',
+    computed_epoch_cycle_index = np.memmap(record_directory + '/features/epoch_cycle_index.mm',
                                            mode='r',
                                            dtype='float32',
                                            shape=shape)
@@ -87,7 +87,7 @@ def test_memmap_with_features_only():
     assert np.linalg.norm(computed_epoch_cycle_index - cyclic) == 0
 
     shape = tuple(features_description['epoch_index']['shape'])
-    epoch_index = np.memmap(record_directory + 'features/epoch_index.mm', mode='r',
+    epoch_index = np.memmap(record_directory + '/features/epoch_index.mm', mode='r',
                             dtype='float32',
                             shape=shape)
     new_epoch_index = index_window(fake_sig, {'fs': 1}, increment_duration=1,

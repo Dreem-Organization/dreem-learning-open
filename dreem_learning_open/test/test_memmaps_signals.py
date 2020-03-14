@@ -21,10 +21,10 @@ def test_h5_to_memmaps_depth():
     memmap_directory = \
     h5_to_memmaps(['/tmp/fake.h5'], '/tmp/memmap_test/', memmap_description=memmaps_description,
                   parallel=False)[0]
-    assert len(os.listdir(memmap_directory + 'fake/')) == 5
-    assert set(os.listdir(memmap_directory + 'fake/signals')) == set(
+    assert len(os.listdir(memmap_directory + '/fake/')) == 5
+    assert set(os.listdir(memmap_directory + '/fake/signals')) == set(
         [group['name'] + '.mm' for group in memmaps_description['signals']])
-    with open(memmap_directory + 'fake/properties.json', 'r') as f:
+    with open(memmap_directory + '/fake/properties.json', 'r') as f:
         assert json.load(f) == expected_properties
     shutil.rmtree('/tmp/memmap_test/')
     os.remove('/tmp/fake.h5')
@@ -39,10 +39,10 @@ def test_h5_to_memmaps_no_hypno():
     memmap_directory = \
     h5_to_memmaps(['/tmp/fake.h5'], '/tmp/memmap_test/', memmap_description=memmaps_description,
                   parallel=False)[0]
-    assert len(os.listdir(memmap_directory + 'fake/')) == 5
-    assert set(os.listdir(memmap_directory + 'fake/signals')) == set(
+    assert len(os.listdir(memmap_directory + '/fake/')) == 5
+    assert set(os.listdir(memmap_directory + '/fake/signals')) == set(
         [group['name'] + '.mm' for group in memmaps_description['signals']])
-    with open(memmap_directory + 'fake/properties.json', 'r') as f:
+    with open(memmap_directory + '/fake/properties.json', 'r') as f:
         assert json.load(f) == expected_properties
     shutil.rmtree('/tmp/memmap_test/')
     os.remove('/tmp/fake.h5')

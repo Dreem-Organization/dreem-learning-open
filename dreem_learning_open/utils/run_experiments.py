@@ -23,7 +23,7 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
             if dataset in datasets:
                 del memmap_description['dataset']
                 exp_name = memmap_description.get('name', experiment)
-                dataset_parameters = json.load(open(experiment_directory + 'dataset.json'))
+                dataset_parameters = json.load(open(os.path.join(experiment_directory, 'dataset.json')))
                 for dataset_parameter in dataset_parameters:
                     if 'name' in dataset_parameter:
                         exp_name_bis = os.path.join(exp_name, dataset_parameter['name'])

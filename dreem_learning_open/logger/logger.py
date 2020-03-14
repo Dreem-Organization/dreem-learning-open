@@ -40,18 +40,17 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
                 'begin': int(time.time()), 'end': None, 'experiment_id': experiment_id
                 }
     if 'records_name' not in dataset_settings:
-        records = [dataset_settings['h5_directory'] + record for record in
+        records = [os.path.join(dataset_settings['h5_directory'], record) for record in
                    os.listdir(dataset_settings['h5_directory'])]
     else:
-        records = [dataset_settings['h5_directory'] + record for record in
+        records = [os.path.join(dataset_settings['h5_directory'], record) for record in
                    dataset_settings['records_name']]
 
     if generate_memmaps:
         memmaps_directory, groups_description, features_description = h5_to_memmaps(
             records=records,
             memmap_description=memmap_description,
-            memmap_directory=dataset_settings[
-                'memmap_directory'],
+            memmap_directory=dataset_settings['memmap_directory'],
             parallel=parralel)
 
         memmap_records = [os.path.join(memmaps_directory, record) for record in
@@ -147,8 +146,7 @@ def log_experiment(dataset_settings, memmap_description, dataset_parameters,
         os.makedirs(trainer_save_folder)
 
     trainer = Trainer(net=net, save_folder=trainer_save_folder,
-                      **trainer_parameters['args']
-                      )
+                      **trainer_parameters['args'])
 
     trainer.train(train_dataset=dataset_train, validation_dataset=dataset_validation)
 
@@ -216,7 +214,7 @@ def inference_on_dataset(records, experiment_folder, return_prob=False):
             padding = groups_description[group]['padding'] // 30
         dataset_parameters = experiment_description['dataset_parameters']
 
-    net = ModuloNet.load(os.path.split(experiment_folder, 'best_model.gz'))
+    net = ModuloNet.load(os.path.join(experiment_folder, 'best_model.gz'))
 
     def count_parameters(model):
         return sum(p.numel() for p in model.parameters())

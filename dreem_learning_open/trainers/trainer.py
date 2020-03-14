@@ -111,7 +111,7 @@ class Trainer:
             hypnogram_target = validation_dataset.hypnogram[record]
             hypnogram_predicted = predictions[record]
 
-            hypnograms[record.split('/')[-2]] = {
+            hypnograms[os.path.split(record)[-2]] = {
                 'predicted': hypnogram_predicted.astype(int).tolist(),
                 'target': hypnogram_target.astype(int).tolist()}
             record_weights += [np.sum(hypnogram_target >= 0)]

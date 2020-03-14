@@ -36,7 +36,7 @@ def processs_group(h5, group_description, truncate_to_second=None):
 
             if truncate_to_second:
                 sig_duration = (len(signals[-1]) // signals_properties[-1]['fs']) * \
-                               signals_properties[-1]['fs']
+                    signals_properties[-1]['fs']
                 sig_duration = int(sig_duration)
                 signals[-1] = signals[-1][:sig_duration]
 
@@ -66,7 +66,7 @@ def compute_epoch_features(h5, features_description, signals):
     for signal in signals:
         signals_tp += [np.expand_dims(h5[signal][:], -1)]
         signals_properties = {'fs': record_description[signal]['fs'], 'padding': 0,
-                              'filename': (h5.filename).split('/')[-1].replace('.h5', '')}
+                              'filename': os.path.basename(h5.filename).replace('.h5', '')}
     signals_tp = np.concatenate(signals_tp, -1)
     if 'signals_preprocessing' in features_description:
         for operation in features_description['signals_preprocessing']:
@@ -86,11 +86,11 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
     def process_record(record):
         try:
             if isinstance(record, str):
-                record_name =  os.path.basename(record).replace('.h5', '')
+                record_name = os.path.basename(record).replace('.h5', '')
             elif isinstance(record, h5py.File):
-                record_name =  os.path.basename(record.filename).replace('.h5', '')
+                record_name = os.path.basename(record.filename).replace('.h5', '')
 
-            save_directory = os.path.join(memmap_directory, pipeline_hash,  record_name)
+            save_directory = os.path.join(memmap_directory, pipeline_hash, record_name)
             if not os.path.exists(save_directory):  # create it
                 os.makedirs(os.path.join(save_directory, 'signals'))
                 os.makedirs(os.path.join(save_directory, 'features'))
@@ -130,7 +130,7 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
                         for group_name, group in groups['properties'].items():
                             group_fs = group['fs']
                             groups['signals'][group_name] = groups['signals'][group_name][
-                                                            :(min_duration * group_fs)]
+                                :(min_duration * group_fs)]
                             group['shape'] = groups['signals'][group_name].shape
                             durations += [group['shape'][0] // group['fs']]
 
@@ -152,9 +152,9 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
                     for feature in computed_features:
                         if signals_duration is not None:
                             assert feature['value'].shape[
-                                       0] == signals_duration // 30, 'Invalid features_data shape for ' + \
-                                                                     feature[
-                                                                         'name']
+                                0] == signals_duration // 30, 'Invalid features_data shape for ' + \
+                                feature[
+                                'name']
                             durations += [feature['value'].shape[0] * 30]
                         else:
                             durations += [feature['value'].shape[0] * 30]
@@ -205,7 +205,7 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
                             shape['shape'] = (
                                 truncated_duration * groups['properties'][group_name]['fs'] * 30,
                                 *shape['shape'][1:])
-                            group_arr = np.memmap(save_directory + 'signals/' + group_name + '.mm',
+                            group_arr = np.memmap(os.path.join(save_directory, 'signals', group_name + '.mm'),
                                                   dtype='float32',
                                                   mode='w+',
                                                   shape=shape['shape'])
@@ -257,7 +257,7 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
                 features_description = json.load(f)
                 for feature in features_description:
                     features_description[feature]['shape'] = features_description[feature]['shape'][
-                                                             1:]
+                        1:]
 
     groups_description_hash = [hash(json.dumps(d)) for d in groups_description]
     assert len(np.unique(groups_description_hash)) == 1

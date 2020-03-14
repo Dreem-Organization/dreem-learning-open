@@ -64,12 +64,12 @@ def test_memmap_with_features_only():
     generate_fake_record(three_groups_record_description)
     memmaps_description = features_memmap
     record_directory = \
-    h5_to_memmaps(['/tmp/fake.h5'], '/tmp/memmap_test/', memmap_description=memmaps_description,
-                  parallel=False)[0]
+        h5_to_memmaps(['/tmp/fake.h5'], '/tmp/memmap_test/', memmap_description=memmaps_description,
+                      parallel=False)[0]
 
     record_directory = record_directory + \
-                       [record for record in os.listdir(record_directory) if '.' not in record][
-                           0] + '/'
+        [record for record in os.listdir(record_directory) if '.' not in record][
+            0] + '/'
     with open(record_directory + 'features_description.json') as f:
         features_description = json.load(f)
 

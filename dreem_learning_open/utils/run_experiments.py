@@ -59,11 +59,13 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
                     rd.seed(2019)
                     rd.shuffle(available_dreem_records)
 
-                    if dataset in ['dodo','mass_multi_channel','mass']:
+                    if dataset in ['dodo','mass_multi_channel','mass','sleep_edf']:
                         if dataset=='dodo':
                             N_FOLDS = 20
-                        if dataset in ['mass_multi_channel','mass']:
+                        elif dataset in ['mass_multi_channel','mass']:
                             N_FOLDS = 31
+                        else:
+                            N_FOLDS = 10
                         N_FOLDS = N_FOLDS - 1
                         FOLDS_SIZE = int(len(available_dreem_records) // N_FOLDS)
                         folds = [available_dreem_records[FOLDS_SIZE * x:FOLDS_SIZE * (x + 1)] for x

@@ -1,0 +1,24 @@
+{
+  "signals": [
+    {
+      "name": "signals",
+      "normalization": [
+        {
+          "type": "spectrogram",
+          "args": {
+            "logpower": true,
+            "window_duration": 2,
+            "window_overlap": 1,
+            "fs": 100,
+            "clamp": 1e-20
+          }
+        },
+        {
+          "type": "standardization",
+          "args": {}
+        }
+      ]
+    }
+  ],
+  "features": []
+}

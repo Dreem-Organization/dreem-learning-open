@@ -6,14 +6,13 @@ from dreem_learning_open.settings import DODO_SETTINGS, DODH_SETTINGS
 from dreem_learning_open.settings import EXPERIMENTS_DIRECTORY, RESULTS_DIRECTORY
 from dreem_learning_open.utils.run_experiments import run_experiments
 
-
 def memmap_hash(memmap_description):
     return hashlib.sha1(json.dumps(memmap_description).encode()).hexdigest()[:10]
 
 
 datasets = {'dodo': DODO_SETTINGS, 'dodh': DODH_SETTINGS}
 experiments_directory = 'scripts/ablation_simple_sleep_net/'
-experiments = [experiment for experiment in os.listdir(experiments_directory) if os.path.isdir(
+experiments = [experiment for experiment in ['filter_bank'] if os.path.isdir(
     experiments_directory + experiment)]
 
 run_experiments(experiments, experiments_directory, EXPERIMENTS_DIRECTORY, datasets=datasets)

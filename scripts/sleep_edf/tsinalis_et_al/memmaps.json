@@ -1,0 +1,26 @@
+[
+  {
+    "dataset": "sleep_edf",
+    "signals": [
+      {
+        "name": "signals",
+        "signals": [
+          "signals/eeg/EEG Fpz-Cz",
+          "signals/eeg/EEG Pz-Oz",
+          "signals/eog/EOG horizontal"
+        ],
+        "processings": [
+          {
+            "type": "padding",
+            "args": {
+              "padding_duration": 900,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ],
+    "features": [
+  ]
+  }
+]

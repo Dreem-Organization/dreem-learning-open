@@ -15,6 +15,7 @@ def memmap_hash(memmap_description):
 
 datasets = {'sleep_edf': SLEEP_EDF_SETTINGS}
 experiments_directory = 'scripts/sleep_edf/'
+mode = 'Extended'
 
 records = os.listdir(SLEEP_EDF_SETTINGS['h5_directory'])
 records_for_subject = {}
@@ -25,15 +26,33 @@ for record in records:
     else:
         records_for_subject[subject_id] = [record.replace('.h5','')]
 
-subjects_split = [{'subject':k,'records':v} for k,v in records_for_subject.items()]
-split = {
-    'type':'kfolds',
-    'args':{
-        'n_folds':10,
-        'subjects':subjects_split
+if mode == 'SC-20':
+    subjects = list(records_for_subject.keys())
+    subjects.sort()
+    subjects = subjects[:20]
+    subjects_split = [{'subject':k,'records':v} for k,v in records_for_subject.items() if k in
+                      subjects]
+    split = {
+        'type': 'kfolds',
+        'args': {
+            'n_folds': 20,
+            'subjects': subjects_split
+        }
     }
-}
-experiments = ['simple_sleep_net']
+elif mode == 'extended':
+    subjects_split = [{'subject': k, 'records': v} for k, v in records_for_subject.items()]
+    split = {
+        'type': 'kfolds',
+        'args': {
+            'n_folds': 10,
+            'subjects': subjects_split
+        }
+    }
+
+
+
+experiments = ['deep_sleep_net','seq_sleep_net','mixed_neural_network','chambon_et_al',
+               'tsinallis_et_al']
 run_experiments(experiments,
                 experiments_directory,
                 EXPERIMENTS_DIRECTORY,

@@ -5,7 +5,7 @@
       {
         "type": "kill_channel",
         "args": {
-          "p": 0.2
+          "p": 0.5
         }
       }
     ]

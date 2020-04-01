@@ -18,7 +18,7 @@ def split_list(a, n):
 
 def run_experiments(experiments, experiments_directory, output_directory, datasets,
                     split,
-                    fold_to_run=None, force=True,error_tolerant = False):
+                    fold_to_run=None, force=False,error_tolerant = False):
     for experiment in experiments:
 
         print(experiment)

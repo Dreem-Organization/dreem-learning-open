@@ -19,20 +19,22 @@ def get_sleep_stages(annotation_file):
     """
     annotation = mne.read_annotations(annotation_file)
 
-    duration = annotation.onset
+    onsets = annotation.onset
+    durations = annotation.duration
+    tot_annotation_duration = onsets[-1] + durations[-1]
+    tot_epoch = int(tot_annotation_duration // 30)
+    stages = np.array([-1] * tot_epoch)
     labels = annotation.description
-    duration = np.diff(duration)
-    labels = labels[:-1]
-    stages = []
-    for i, (dur, annot) in enumerate(zip(duration, labels)):
-        for stage in stages_lookup:
-            if stage in annot:
-                stages += [stages_lookup[stage]] * int(dur // 30)
+
+    for i, (onset,duration, label) in enumerate(zip(onsets, durations, labels)):
+        start_epoch = int(onset // 30)
+        end_epoch = int(start_epoch + duration // 30)
+        stages[start_epoch:end_epoch] = stages_lookup.get(label,-1)
     stages_as_array = np.array(stages)
     first_sleep, last_sleep = np.where(stages_as_array > 0)[0][0], np.where(stages_as_array > 0)[0][
         -1]
     first_sleep, last_sleep = max(0, first_sleep - 60), min(len(stages_as_array), last_sleep + 60)
-    stages = stages[first_sleep:last_sleep]
+    stages = stages[first_sleep:last_sleep].tolist()
 
     return stages, first_sleep * 30, last_sleep * 30
 
@@ -75,6 +77,7 @@ def to_h5(record_file, annotation_files, h5_target_directory, signals, crop_reco
                 signal_labels = {key: value for value, key in enumerate(data.getSignalLabels())}
 
                 hypno, time_begin, time_end = get_sleep_stages(annotation_files)
+                json.dump(hypno, open('/home/antoine/hypno.json', 'w'))
                 h5_target['hypnogram'] = np.array(hypno).astype(int)
 
                 # Add signal

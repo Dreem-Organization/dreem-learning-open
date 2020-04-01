@@ -16,8 +16,26 @@ def memmap_hash(memmap_description):
 datasets = {'sleep_edf': SLEEP_EDF_SETTINGS}
 experiments_directory = 'scripts/sleep_edf/'
 
+records = os.listdir(SLEEP_EDF_SETTINGS['h5_directory'])
+records_for_subject = {}
+for record in records:
+    subject_id = record[:5]
+    if subject_id in records_for_subject:
+        records_for_subject[subject_id] += [record.replace('.h5','')]
+    else:
+        records_for_subject[subject_id] = [record.replace('.h5','')]
+
+subjects_split = [{'subject':k,'records':v} for k,v in records_for_subject.items()]
+split = {
+    'type':'kfolds',
+    'args':{
+        'n_folds':10,
+        'subjects':subjects_split
+    }
+}
 experiments = ['simple_sleep_net']
 run_experiments(experiments,
                 experiments_directory,
                 EXPERIMENTS_DIRECTORY,
+                split = split,
                 datasets=datasets, error_tolerant=False)

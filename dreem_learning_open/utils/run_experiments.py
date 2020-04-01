@@ -12,8 +12,12 @@ import shutil
 def memmap_hash(memmap_description):
     return hashlib.sha1(json.dumps(memmap_description).encode()).hexdigest()[:10]
 
+def split_list(a, n):
+    k, m = divmod(len(a), n)
+    return list(a[i * k + min(i, m):(i + 1) * k + min(i + 1, m)] for i in range(n))
 
 def run_experiments(experiments, experiments_directory, output_directory, datasets,
+                    split,
                     fold_to_run=None, force=True,error_tolerant = False):
     for experiment in experiments:
 
@@ -59,37 +63,51 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
                     rd.seed(2019)
                     rd.shuffle(available_dreem_records)
 
-                    if dataset in ['dodo','mass_multi_channel','mass','sleep_edf']:
-                        if dataset=='dodo':
-                            N_FOLDS = 20
-                        elif dataset in ['mass_multi_channel','mass']:
-                            N_FOLDS = 31
-                        else:
-                            N_FOLDS = 10
-                        N_FOLDS = N_FOLDS - 1
-                        FOLDS_SIZE = int(len(available_dreem_records) // N_FOLDS)
-                        folds = [available_dreem_records[FOLDS_SIZE * x:FOLDS_SIZE * (x + 1)] for x
-                                 in
-                                 range(int(len(available_dreem_records) / FOLDS_SIZE + 1))]
+                    assert split['type'] in ['loov','kfolds']
 
+                    if split['type'] == 'kfolds':
+                        N_FOLDS = split['args']['n_folds']
+                        if 'subjects' not in split['args']: # assumer record-wise split
+                            folds = split_list(available_dreem_records,N_FOLDS)
+                        else: # assume multiple record per subject and subject-wise split
+                            subjects = []
+                            for subject in split['args']['subjects']:
+                                for record in subject['records']:
+                                    if record in os.listdir(dataset_dir):
+                                        subjects += [subject]
+                                        break
 
-                    else:
+                            subject_per_folds = split_list(subjects,N_FOLDS)
+
+                            folds = []
+                            for subjects in subject_per_folds:
+                                record_in_fold = []
+                                for subject in subjects:
+                                    for record in subject['records']:
+                                        record_in_fold += [dataset_dir + record + '/']
+                                folds += [record_in_fold]
+
+                    elif split['type'] == 'loov':
                         # LOOV training
                         folds = [[record] for record in available_dreem_records]
+                    else:
+                        raise ValueError
 
                     if fold_to_run is None:
                         fold_to_run = [j for j, _ in enumerate(folds)]
 
                     for i, fold in enumerate(folds):
+
                         if i in fold_to_run:
-                            other_records = [record for record in available_dreem_records if
-                                             record not in fold]
+                            other_folds = [fold for k,fold in enumerate(folds) if k!= i]
+                            print(len(other_folds))
                             rd.seed(2019 + i)
-                            rd.shuffle(other_records)
-                            train_records, val_records, _ = train_test_val_split(other_records,
-                                                                                 0.8, 0.2,
-                                                                                 0,
-                                                                                 seed=2019)
+                            rd.shuffle(other_folds)
+                            n_val = max(1,int(len(other_folds) * 0.2))
+                            train_folds, val_folds = other_folds[n_val:],other_folds[:n_val]
+                            train_records = [record for train_fold in
+                                             train_folds for record in train_fold ]
+                            val_records = [record for val_fold in val_folds for record in val_fold ]
                             experiment_description = {
                                 'memmap_description': memmap_description,
                                 'dataset_settings': dataset_setting,

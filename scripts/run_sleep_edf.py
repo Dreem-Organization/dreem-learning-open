@@ -15,7 +15,7 @@ def memmap_hash(memmap_description):
 
 datasets = {'sleep_edf': SLEEP_EDF_SETTINGS}
 experiments_directory = 'scripts/sleep_edf/'
-mode = 'Extended'
+mode = 'SC-20'
 
 records = os.listdir(SLEEP_EDF_SETTINGS['h5_directory'])
 records_for_subject = {}
@@ -27,6 +27,7 @@ for record in records:
         records_for_subject[subject_id] = [record.replace('.h5','')]
 
 if mode == 'SC-20':
+    datasets = {'sleep_edf': SLEEP_EDF_SETTINGS}
     subjects = list(records_for_subject.keys())
     subjects.sort()
     subjects = subjects[:20]
@@ -51,10 +52,10 @@ elif mode == 'extended':
 
 
 
-experiments = ['deep_sleep_net','seq_sleep_net','mixed_neural_network','chambon_et_al',
-               'tsinallis_et_al']
+experiments = ['deep_sleep_net','seq_sleep_net','chambon_et_al','tsinalis_et_al']
 run_experiments(experiments,
                 experiments_directory,
                 EXPERIMENTS_DIRECTORY,
                 split = split,
-                datasets=datasets, error_tolerant=False)
+                datasets=datasets, error_tolerant=False,force_name='sc_20')
+

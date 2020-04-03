@@ -18,10 +18,9 @@ def split_list(a, n):
 
 def run_experiments(experiments, experiments_directory, output_directory, datasets,
                     split,
-                    fold_to_run=None, force=False,error_tolerant = False):
+                    fold_to_run=None, force=False,error_tolerant = False,force_name =None):
     for experiment in experiments:
 
-        print(experiment)
         experiment_directory = experiments_directory + experiment + '/'
         memmaps_description = json.load(open(experiment_directory + 'memmaps.json'))
         for memmap_description in memmaps_description:
@@ -31,7 +30,9 @@ def run_experiments(experiments, experiments_directory, output_directory, datase
                 exp_name = memmap_description.get('name', experiment)
                 dataset_parameters = json.load(open(experiment_directory + 'dataset.json'))
                 for dataset_parameter in dataset_parameters:
-                    if 'name' in dataset_parameter:
+                    if force_name is not None:
+                        exp_name_bis = f"{force_name}/{exp_name}"
+                    elif 'name' in dataset_parameter:
                         exp_name_bis = f"{exp_name}/{dataset_parameter['name']}"
                     else:
                         exp_name_bis = exp_name

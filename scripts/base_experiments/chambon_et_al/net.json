@@ -3,7 +3,7 @@
   "output_mode": "many",
   "eval_output_mode": "many",
   "type": "modulo_net",
-  "input_temporal_context": 21,
+  "input_temporal_context": 9,
   "encoders": {
     "eeg": {
       "type": "ChambonEpochEncoder",

@@ -1,6 +1,6 @@
 [
   {
-    "temporal_context": 21,
+    "temporal_context": 5,
     "temporal_context_mode": "concatenated"
   }
 ]

@@ -41,6 +41,7 @@ def processs_group(h5, group_description, truncate_to_second=None):
                 signals[-1] = signals[-1][:sig_duration]
 
     fs = [sig['fs'] for sig in signals_properties]
+    print(signals_properties)
     padding = [sig['padding'] for sig in signals_properties]
 
     assert len(set(fs)) == 1, 'frequencies are not the same within the group'

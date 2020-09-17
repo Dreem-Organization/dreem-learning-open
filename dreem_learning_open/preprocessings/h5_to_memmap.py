@@ -247,8 +247,8 @@ def h5_to_memmaps(records, memmap_directory, memmap_description, parallel=True, 
 
     groups_description = []
     for record_name in os.listdir(os.path.join(memmap_directory, pipeline_hash)):
-        if '.' not in record_name:
-            save_directory = os.path.join(memmap_directory, pipeline_hash, record_name)
+        save_directory = os.path.join(memmap_directory, pipeline_hash, record_name)
+        if os.path.isdir(save_directory):
             with open(os.path.join(save_directory, 'properties.json')) as f:
                 record_description = json.load(f)
                 groups_description += [

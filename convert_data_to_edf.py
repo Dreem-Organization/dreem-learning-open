@@ -1,3 +1,5 @@
+import os
+
 import pyedflib
 import h5py
 import pytz
@@ -24,9 +26,15 @@ def convert_h5_to_edf(h5_path, output_file="psg.edf",psg_properties = psg_proper
     for subfolder in subfolders:
         psg_labels.extend([f"{subfolder}/{x}" for x in list(h5[subfolder].keys())])
 
-    start_time = pytz.timezone('UTC').localize(
-        dt.datetime.utcfromtimestamp(h5.attrs["start_time"])
-    )
+    try:
+        start_time = pytz.timezone('UTC').localize(
+            dt.datetime.utcfromtimestamp(h5.attrs["start_time"])
+        )
+    except KeyError:
+        start_time = pytz.timezone('UTC').localize(
+            dt.datetime.utcfromtimestamp(0)
+        )
+
     number_of_data_records = int(len(h5[psg_labels[0]]) / 250)
     duration = 1
     header = (

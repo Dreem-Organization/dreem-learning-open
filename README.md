@@ -75,6 +75,9 @@ Fig 1. shows the overall inference pipeline, Fig 2. adds the Trainer and its ret
 ## Download of DOD-O and DOD-H
 
 DOD-O and DOD-H can be downloaded on [Zenodo](https://zenodo.org/records/15900394)
+
+> **Note on the DOD-O cohort size.** The Zenodo release contains 56 `.h5` files under `dod-o/`, but the original paper (Guillot et al., 2020) reports a 55-patient cohort. The extra record, `5d8e93a5-d26a-436d-bc2c-e9527dc92cbf` (the only file whose name matches its own `record_id`), has no consensus annotation and was therefore excluded from the original cohort. **To reproduce the paper's results, exclude this record.** It can safely be included in other downstream analyses that do not require the consensus scoring.
+
 The records are saved in a zip containing .h5 formatted files. Each h5 is in the following format:
 * Hypnogram: Array
 * Signals: 

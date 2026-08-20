@@ -7,7 +7,7 @@ Cython
 h5py
 tqdm
 boto3
-requests==2.20.1
+requests==2.31.0
 pytest==5.0.0
 pytest-cov==2.7.1
 scikit-learn==0.20.1
